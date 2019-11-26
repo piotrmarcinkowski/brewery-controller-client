@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/thermSensorImageView"
+            app:srcCompat="@drawable/ic_therm_sensor"
+            app:layout_constraintTop_toTopOf="@+id/currentTemperature"
+            app:layout_constraintBottom_toBottomOf="@+id/currentTemperature"
+            app:layout_constraintEnd_toStartOf="@+id/currentTemperature" android:layout_marginEnd="16dp"/>
+    <TextView
+            android:id="@+id/currentTemperature"
+            android:text="18.0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_bias="0.498" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/temperatureUnits"
+            android:text="@string/units_celcius" android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/currentTemperature"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toTopOf="@+id/currentTemperature"
+            app:layout_constraintBottom_toBottomOf="@+id/currentTemperature"/>
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/programName"
+            android:textSize="18sp" android:text="@string/program_default_name"
+            android:textAlignment="center" tools:layout_editor_absoluteX="0dp"
+            android:layout_marginBottom="24dp" app:layout_constraintBottom_toTopOf="@+id/currentTemperature"/>
+    <ImageView
+            android:layout_width="@dimen/program_temperature_changing_indicator_size"
+            android:layout_height="@dimen/program_temperature_changing_indicator_size"
+            app:srcCompat="@drawable/temperature_up_indicator"
+            android:id="@+id/temperatureUpIndicator"
+            app:layout_constraintStart_toStartOf="@+id/currentTemperature"
+            app:layout_constraintBottom_toTopOf="@+id/currentTemperature"
+            app:layout_constraintEnd_toEndOf="@+id/currentTemperature"/>
+    <ImageView
+            android:layout_width="@dimen/program_temperature_changing_indicator_size"
+            android:layout_height="@dimen/program_temperature_changing_indicator_size"
+            app:srcCompat="@drawable/temperature_down_indicator"
+            android:id="@+id/temperatureDownIndicator"
+            app:layout_constraintStart_toStartOf="@+id/currentTemperature"
+            app:layout_constraintEnd_toEndOf="@+id/currentTemperature"
+            app:layout_constraintTop_toBottomOf="@+id/currentTemperature"/>
+    <TextView
+            android:text="@string/max_temperature_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp" android:id="@+id/textView"
+            app:layout_constraintStart_toStartOf="@+id/thermSensorImageView"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/max_temperature"
+            app:layout_constraintBottom_toTopOf="@+id/thermSensorImageView"/>
+    <TextView
+            android:id="@+id/max_temperature"
+            tools:text="18.2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp" app:layout_constraintStart_toEndOf="@+id/textView"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toEndOf="@+id/thermSensorImageView"
+            app:layout_constraintBottom_toTopOf="@+id/thermSensorImageView" android:maxLines="1"/>
+    <TextView
+            android:text="@string/min_temperature_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp" android:id="@+id/textView2"
+            app:layout_constraintEnd_toStartOf="@+id/min_temperature"
+            app:layout_constraintStart_toStartOf="@+id/thermSensorImageView"
+            app:layout_constraintTop_toBottomOf="@+id/thermSensorImageView"/>
+    <TextView
+            android:id="@+id/min_temperature"
+            tools:text="17.8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp" app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="@+id/thermSensorImageView"
+            app:layout_constraintTop_toBottomOf="@+id/thermSensorImageView" android:maxLines="1"/>
+
+</android.support.constraint.ConstraintLayout>

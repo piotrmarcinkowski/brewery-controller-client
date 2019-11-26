@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="program_grid_item_width">160dp</dimen>
+    <dimen name="program_grid_item_height">160dp</dimen>
+    <dimen name="program_temperature_changing_indicator_size">30dp</dimen>
+</resources>

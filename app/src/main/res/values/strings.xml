@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">bcc</string>
+    <string name="units_celcius">\u2103</string>
+    <string name="program_default_name">Program</string>
+    <string name="max_temperature_label">Max: </string>
+    <string name="min_temperature_label">Min: </string>
+</resources>
