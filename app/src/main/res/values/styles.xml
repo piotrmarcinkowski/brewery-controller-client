@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/secondaryColor</item>
     </style>
 
+    <style name="TextTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+
 </resources>

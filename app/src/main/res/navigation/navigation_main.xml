@@ -11,20 +11,20 @@
             android:label="fragment_programs"
             tools:layout="@layout/fragment_programs" >
         <action
-                android:id="@+id/action_programsFragment_to_connectionSetupFragment"
-                app:destination="@id/connectionSetupFragment" />
+                android:id="@+id/action_programsFragment_to_settingsFragment"
+                app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
-            android:id="@+id/connectionSetupFragment"
-            android:name="com.pma.bcc.fragments.ConnectionSetupFragment"
-            android:label="ConnectionSetupFragment" />
+            android:id="@+id/settingsFragment"
+            android:name="com.pma.bcc.fragments.SettingsFragment"
+            android:label="SettingsFragment" />
     <fragment
             android:id="@+id/thermSensorsListFragment"
             android:name="com.pma.bcc.fragments.ThermSensorsListFragment"
             android:label="fragment_therm_sensors_list"
             tools:layout="@layout/fragment_therm_sensors_list" >
         <action
-                android:id="@+id/action_thermSensorsListFragment_to_connectionSetupFragment"
-                app:destination="@id/connectionSetupFragment" />
+                android:id="@+id/action_thermSensorsListFragment_to_settingsFragment"
+                app:destination="@id/settingsFragment" />
     </fragment>
 </navigation>

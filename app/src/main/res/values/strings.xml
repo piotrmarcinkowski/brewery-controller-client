@@ -4,4 +4,15 @@
     <string name="program_default_name">Program</string>
     <string name="max_temperature_label">Max: </string>
     <string name="min_temperature_label">Min: </string>
+    <string name="title_connection_setup">Connection setup</string>
+    <string name="prefs_title_connection_settings">Connection settings</string>
+    <string name="prefs_server_status">Server status:</string>
+    <string name="prefs_server_address">Server address</string>
+    <string name="prefs_server_address_description">Server IP or domain name</string>
+    <string name="prefs_server_api_url_base">Server API URL</string>
+    <string name="prefs_server_api_url_base_default">brewery/api/v1.0</string>
+    <string name="prefs_server_api_url_base_description">Server\'s API URL base</string>
+    <string name="prefs_server_port">Server port</string>
+    <string name="prefs_server_port_default">8080</string>
+    <string name="prefs_server_port_description">Server listening port</string>
 </resources>

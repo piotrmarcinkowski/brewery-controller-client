@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/prefs_title_connection_settings">
+        <Preference
+                android:key="prefs_connection_status"
+                android:singleLine="true"
+                android:title="@string/prefs_server_status" />
+
+        <EditTextPreference
+                android:key="prefs_server_address"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:summary="@string/prefs_server_address_description"
+                android:title="@string/prefs_server_address" />
+
+        <EditTextPreference
+                android:key="prefs_server_port"
+                android:defaultValue="@string/prefs_server_port_default"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:summary="@string/prefs_server_port_description"
+                android:title="@string/prefs_server_port" />
+
+        <EditTextPreference
+                android:key="prefs_server_api_url_base"
+                android:defaultValue="@string/prefs_server_api_url_base_default"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:summary="@string/prefs_server_api_url_base_description"
+                android:title="@string/prefs_server_api_url_base" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

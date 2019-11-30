@@ -7,7 +7,8 @@ buildscript {
     ext.rxjava_version = '2.2.10'
     ext.dagger_version = '2.23.2'
     ext.gson_version = '2.8.5'
-    ext.nav_version = "2.1.0"
+    ext.nav_version = '2.1.0'
+    ext.prefs_version = '1.1.0'
 
     repositories {
         google()
