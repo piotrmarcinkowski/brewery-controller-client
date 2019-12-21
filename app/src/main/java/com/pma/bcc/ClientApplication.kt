@@ -1,17 +1,20 @@
 package com.pma.bcc
 
-import android.app.Application
-import com.pma.bcc.di.ApplicationComponent
-import com.pma.bcc.di.DaggerApplicationComponent
-import com.pma.bcc.di.NetworkModule
+import com.pma.bcc.di.components.DaggerApplicationComponent
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerApplication
+import mu.KLogging
 
-class ClientApplication : Application() {
-    lateinit var appComponent : ApplicationComponent
+
+class ClientApplication : DaggerApplication() {
+    companion object : KLogging()
 
     override fun onCreate() {
         super.onCreate()
-        appComponent = DaggerApplicationComponent.builder()
-            .networkModule(NetworkModule("http://192.168.1.6:8080/brewery/api/v1.0/"))
-            .build()
+        logger.info("onCreate")
+    }
+
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerApplicationComponent.builder().application(this).build()
     }
 }

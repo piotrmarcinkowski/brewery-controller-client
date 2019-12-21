@@ -5,7 +5,7 @@ import com.pma.bcc.model.ThermSensorRepository
 import io.reactivex.Observable
 import org.junit.Test
 import org.mockito.Mockito
-import com.pma.bcc.server.ServerApi
+import com.pma.bcc.net.ServerApi
 
 
 class ThermSensorRepositoryTest {

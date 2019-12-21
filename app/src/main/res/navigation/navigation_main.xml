@@ -13,18 +13,21 @@
         <action
                 android:id="@+id/action_programsFragment_to_settingsFragment"
                 app:destination="@id/settingsFragment" />
+        <action
+                android:id="@+id/action_programsFragment_to_programDetailsFragment"
+                app:destination="@id/programDetailsFragment" />
     </fragment>
     <fragment
             android:id="@+id/settingsFragment"
             android:name="com.pma.bcc.fragments.SettingsFragment"
             android:label="SettingsFragment" />
     <fragment
-            android:id="@+id/thermSensorsListFragment"
-            android:name="com.pma.bcc.fragments.ThermSensorsListFragment"
-            android:label="fragment_therm_sensors_list"
-            tools:layout="@layout/fragment_therm_sensors_list" >
-        <action
-                android:id="@+id/action_thermSensorsListFragment_to_settingsFragment"
-                app:destination="@id/settingsFragment" />
+            android:id="@+id/programDetailsFragment"
+            android:name="com.pma.bcc.fragments.ProgramDetailsFragment"
+            android:label="ProgramStatusFragment"
+            tools:layout="@layout/fragment_program_details">
+        <argument
+                android:name="program"
+                app:argType="com.pma.bcc.model.Program" />
     </fragment>
 </navigation>

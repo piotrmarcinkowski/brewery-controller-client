@@ -5,17 +5,29 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context="com.pma.bcc.fragments.ProgramsFragment">
 
-    <TextView
-            android:id="@+id/programs"
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/programs_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="Programs" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_margin="5dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="@integer/programs_grid_columns_number"
+            tools:listitem="@layout/program_grid_item"
+            tools:itemCount="4" />
 
-    <Button
-            android:id="@+id/go_to_settings"
+    <ProgressBar
+            android:id="@+id/progress_loading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Settings" />
+            android:layout_gravity="center" />
+
+    <com.pma.bcc.view.ConnectionErrorView
+            android:id="@+id/view_connection_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
 </FrameLayout>

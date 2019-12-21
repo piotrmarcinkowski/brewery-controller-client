@@ -1,18 +1,33 @@
 <resources>
     <string name="app_name">bcc</string>
-    <string name="units_celcius">\u2103</string>
+    <string name="units_celsius">\u2103</string>
     <string name="program_default_name">Program</string>
-    <string name="max_temperature_label">Max: </string>
-    <string name="min_temperature_label">Min: </string>
+    <string name="max_temperature_label">Max:</string>
+    <string name="min_temperature_label">Min:</string>
     <string name="title_connection_setup">Connection setup</string>
     <string name="prefs_title_connection_settings">Connection settings</string>
     <string name="prefs_server_status">Server status:</string>
     <string name="prefs_server_address">Server address</string>
     <string name="prefs_server_address_description">Server IP or domain name</string>
     <string name="prefs_server_api_url_base">Server API URL</string>
-    <string name="prefs_server_api_url_base_default">brewery/api/v1.0</string>
     <string name="prefs_server_api_url_base_description">Server\'s API URL base</string>
     <string name="prefs_server_port">Server port</string>
-    <string name="prefs_server_port_default">8080</string>
     <string name="prefs_server_port_description">Server listening port</string>
+    <string name="button_retry">Retry</string>
+    <string name="button_settings">Settings</string>
+    <string name="program_details_label_therm_sensor">Therm Sensor</string>
+    <string name="program_details_label_heating_relay_index">Heating relay</string>
+    <string name="program_details_heating_relay_not_available">Heating device not available</string>
+    <string name="program_details_label_cooling_relay_index">Cooling relay</string>
+    <string name="program_details_cooling_relay_not_available">Cooling device not available</string>
+    <string name="program_details_button_edit">Edit Program</string>
+    <string name="program_details_button_back">Back</string>
+    <string name="program_details_program_active">Program is running</string>
+    <string name="program_details_program_inactive">Program is stopped</string>
+    <string name="programs_error_title_cant_connect_server">Failed to connect to server</string>
+    <string name="programs_error_message_connection_setup_missing">Server connection is not configured. Go to settings and provide the server data.</string>
+    <string name="programs_error_message_connection_timeout">Check the server configuration and make sure you have access to it in this network. The server you configured may also be turned off.</string>
+    <string name="programs_error_retry_button">Retry</string>
+    <string name="programs_error_navigation_button_connection_settings">Settings</string>
+
 </resources>

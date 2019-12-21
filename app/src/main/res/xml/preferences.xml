@@ -1,34 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/prefs_title_connection_settings">
+    <PreferenceCategory android:title="@string/prefs_title_connection_settings"
+            app:iconSpaceReserved="false">
         <Preference
                 android:key="prefs_connection_status"
                 android:singleLine="true"
-                android:title="@string/prefs_server_status" />
+                android:title="@string/prefs_server_status"
+                app:iconSpaceReserved="false"
+                app:isPreferenceVisible="false"/>
 
         <EditTextPreference
-                android:key="prefs_server_address"
+                android:key="@string/prefs_key_server_address"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:summary="@string/prefs_server_address_description"
-                android:title="@string/prefs_server_address" />
+                android:title="@string/prefs_server_address"
+                app:iconSpaceReserved="false" />
 
         <EditTextPreference
-                android:key="prefs_server_port"
+                android:key="@string/prefs_key_server_port"
                 android:defaultValue="@string/prefs_server_port_default"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:summary="@string/prefs_server_port_description"
-                android:title="@string/prefs_server_port" />
+                android:title="@string/prefs_server_port"
+                app:iconSpaceReserved="false" />
 
         <EditTextPreference
-                android:key="prefs_server_api_url_base"
+                android:key="@string/prefs_key_server_api_url_base"
                 android:defaultValue="@string/prefs_server_api_url_base_default"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:summary="@string/prefs_server_api_url_base_description"
-                android:title="@string/prefs_server_api_url_base" />
+                android:title="@string/prefs_server_api_url_base"
+                app:iconSpaceReserved="false" />
 
     </PreferenceCategory>
 

@@ -8,10 +8,22 @@
         <item name="colorAccent">@color/secondaryColor</item>
     </style>
 
-    <style name="TextTitle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textAllCaps">true</item>
-        <item name="android:fontFamily">serif</item>
+    <style name="TextStylePropertyValue" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="TextStylePropertyValueMonospace" parent="TextStylePropertyValue">
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="TextStyleError" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="TextStyleErrorTitle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
 </resources>

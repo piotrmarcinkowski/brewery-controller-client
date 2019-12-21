@@ -1,7 +1,7 @@
 package com.pma.bcc.model
 
 import io.reactivex.Observable
-import com.pma.bcc.server.ServerApi
+import com.pma.bcc.net.ServerApi
 import javax.inject.Singleton
 
 @Singleton
