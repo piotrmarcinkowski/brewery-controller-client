@@ -9,6 +9,7 @@ import com.pma.bcc.model.Program
 import com.pma.bcc.model.ProgramState
 import com.pma.bcc.utils.TemperatureFormatter
 import com.pma.bcc.view.ProgramView
+import com.pma.bcc.viewmodels.ProgramDataViewModel
 import kotlinx.android.synthetic.main.program_grid_item.view.*
 import java.util.*
 
@@ -44,17 +45,10 @@ class ProgramsRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val program = programs[position]
-        holder.view.setOnClickListener { itemClickListener.onItemClick(program) }
-        holder.programView.programName = program.name
-        holder.programView.maxTemperature = TemperatureFormatter.format(program.maxTemp)
-        holder.programView.minTemperature = TemperatureFormatter.format(program.minTemp)
-        holder.programView.active = program.active
         val state = programStates[program.id]
 
-        holder.programView.currentTemperatureAvailable = state != null
-        holder.programView.currentTemperature = if (state != null) TemperatureFormatter.format(state.currentTemp) else ""
-        holder.programView.heatingActivated = state?.heatingActivated ?: false
-        holder.programView.coolingActivated = state?.coolingActivated ?: false
+        holder.programView.programStateViewModel = ProgramDataViewModel(program, state)
+        holder.view.setOnClickListener { itemClickListener.onItemClick(program) }
     }
 }
 

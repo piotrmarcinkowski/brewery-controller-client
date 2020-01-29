@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <import type="android.view.View"/>
+        <variable
+                name="programData"
+                type="com.pma.bcc.viewmodels.ProgramDataViewModel"/>
+    </data>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -25,7 +33,7 @@
             android:id="@+id/progress_temperature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="@{programData.temperatureReadInProgress ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -44,6 +52,8 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:text="@{programData.currentTemperature}"
+            android:visibility="@{programData.temperatureReadInProgress ? View.INVISIBLE : View.VISIBLE}"
             tools:text="18.0"/>
 
     <TextView
@@ -65,29 +75,30 @@
             android:ellipsize="end"
             android:lines="1"
             android:maxLines="1"
-            android:text="@string/program_default_name"
+            android:text="@{programData.name}"
             android:textAlignment="center"
             android:textSize="@dimen/program_grid_item_name_text_size"
             app:layout_constraintBottom_toTopOf="@+id/view_current_temperature_placeholder"
             tools:text="Sample Program With Long Name" />
 
-    <ImageView
+    <com.pma.bcc.view.RelayView
             android:id="@+id/image_heating_activated_indicator"
             android:layout_width="@dimen/program_temperature_changing_indicator_size"
             android:layout_height="@dimen/program_temperature_changing_indicator_size"
             app:layout_constraintBottom_toTopOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintEnd_toEndOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintStart_toStartOf="@+id/view_current_temperature_placeholder"
-            app:srcCompat="@drawable/temperature_up_indicator" />
+            android:visibility="@{programData.heatingActivated ? View.VISIBLE : View.INVISIBLE}"/>
 
-    <ImageView
+    <com.pma.bcc.view.RelayView
             android:id="@+id/image_cooling_activated_indicator"
             android:layout_width="@dimen/program_temperature_changing_indicator_size"
             android:layout_height="@dimen/program_temperature_changing_indicator_size"
             app:layout_constraintEnd_toEndOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintStart_toStartOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintTop_toBottomOf="@+id/view_current_temperature_placeholder"
-            app:srcCompat="@drawable/temperature_down_indicator" />
+            app:srcCompat="@drawable/temperature_down_indicator"
+            android:visibility="@{programData.coolingActivated ? View.VISIBLE : View.INVISIBLE}"/>
 
     <TextView
             android:id="@+id/text_max_temperature_label"
@@ -111,6 +122,7 @@
             app:layout_constraintBottom_toTopOf="@+id/image_therm_sensor"
             app:layout_constraintStart_toEndOf="@+id/text_max_temperature_label"
             tools:text="18.2"
+            android:text="@{programData.maxTemperature}"
             />
 
     <ImageView
@@ -146,6 +158,7 @@
             app:layout_constraintTop_toBottomOf="@+id/image_therm_sensor"
             app:layout_constraintStart_toEndOf="@+id/text_min_temperature_label"
             tools:text="17.8"
+            android:text="@{programData.minTemperature}"
             />
 
     <ImageView
@@ -154,6 +167,9 @@
             android:layout_height="wrap_content"
             android:src="@drawable/program_disabled"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintRight_toRightOf="parent"
+            android:visibility="@{programData.active ? View.VISIBLE : View.INVISIBLE}"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
