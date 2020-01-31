@@ -64,7 +64,7 @@ class FakeServerApiFactoryImpl : ServerApiFactory {
 
     private fun fakePrograms() : List<Program> {
         val programs = ArrayList<Program>()
-        programs.add(Program.Builder(null).id("1").name("Aipa Cascade Max").active(true).sensorId("fakeSensor1").coolingRelayIndex(1).build())
+        programs.add(Program.Builder(null).id("1").name("Aipa Cascade Max").active(true).sensorId("fakeSensor1").coolingRelayIndex(1).maxTemp(19.4).minTemp(18.8).build())
         programs.add(Program.Builder(null).id("2").name("Apa").active(true).build())
         programs.add(Program.Builder(null).id("3").name("Lager 1").active(true).build())
         programs.add(Program.Builder(null).id("4").name("Lager 2").active(true).build())

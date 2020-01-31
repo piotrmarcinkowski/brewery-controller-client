@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pma.bcc.R
 import com.pma.bcc.model.Program
 import com.pma.bcc.model.ProgramState
-import com.pma.bcc.utils.TemperatureFormatter
 import com.pma.bcc.view.ProgramView
 import com.pma.bcc.viewmodels.ProgramDataViewModel
 import kotlinx.android.synthetic.main.program_grid_item.view.*
@@ -47,7 +46,7 @@ class ProgramsRecyclerViewAdapter(
         val program = programs[position]
         val state = programStates[program.id]
 
-        holder.programView.programStateViewModel = ProgramDataViewModel(program, state)
+        holder.programView.programDataViewModel = ProgramDataViewModel(program, state)
         holder.view.setOnClickListener { itemClickListener.onItemClick(program) }
     }
 }
