@@ -25,7 +25,7 @@ class ProgramView : FrameLayout {
     }
 
     private fun init() {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.program, this, false)
+        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.program, this, true)
     }
 
     var programStateViewModel : ProgramDataViewModel?

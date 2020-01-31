@@ -88,16 +88,18 @@
             app:layout_constraintBottom_toTopOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintEnd_toEndOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintStart_toStartOf="@+id/view_current_temperature_placeholder"
-            android:visibility="@{programData.heatingActivated ? View.VISIBLE : View.INVISIBLE}"/>
+            android:src="@drawable/temperature_up_indicator"
+            android:visibility="@{programData.heatingActivated ? View.VISIBLE : View.INVISIBLE}" />
 
     <com.pma.bcc.view.RelayView
             android:id="@+id/image_cooling_activated_indicator"
             android:layout_width="@dimen/program_temperature_changing_indicator_size"
             android:layout_height="@dimen/program_temperature_changing_indicator_size"
+            android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintStart_toStartOf="@+id/view_current_temperature_placeholder"
             app:layout_constraintTop_toBottomOf="@+id/view_current_temperature_placeholder"
-            app:srcCompat="@drawable/temperature_down_indicator"
+            android:src="@drawable/temperature_down_indicator"
             android:visibility="@{programData.coolingActivated ? View.VISIBLE : View.INVISIBLE}"/>
 
     <TextView
@@ -168,7 +170,7 @@
             android:src="@drawable/program_disabled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:visibility="@{programData.active ? View.VISIBLE : View.INVISIBLE}"/>
+            android:visibility="@{programData.active ? View.INVISIBLE : View.VISIBLE}"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

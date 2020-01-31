@@ -76,7 +76,7 @@ class FakeServerApiFactoryImpl : ServerApiFactory {
     private fun fakeProgramStates() : List<ProgramState> {
         val data = ArrayList<ProgramState>()
         data.add(ProgramState("1", "", 18.6, true, false))
-        data.add(ProgramState("2", "", 18.2, false, false))
+        data.add(ProgramState("2", "", 18.2, false, true))
         data.add(ProgramState("3", "", 19.2, false, false))
         return data
     }

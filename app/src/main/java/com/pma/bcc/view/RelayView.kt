@@ -6,6 +6,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.core.widget.ImageViewCompat
 import com.pma.bcc.R
 
 class RelayView : ImageView {
@@ -20,13 +21,15 @@ class RelayView : ImageView {
     }
 
     private fun init() {
-
+        if (visibility == View.VISIBLE) {
+            startPulsingAnimation()
+        }
     }
 
     override fun setVisibility(visibility: Int) {
         val currentVisibility = getVisibility()
         super.setVisibility(visibility)
-        if (currentVisibility != getVisibility()) {
+        if (currentVisibility != visibility) {
             onVisibilityChanged(visibility)
         }
     }
