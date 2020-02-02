@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pma.bcc.R
 import com.pma.bcc.model.*
-import com.pma.bcc.net.ServerApi
 import com.pma.bcc.net.ServerApiFactory
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import mu.KLogging
+import java.util.*
 import javax.inject.Inject
 
 const val ERROR_ID_CONNECTION_SETTINGS: String = "ConnectionSettings"
@@ -17,14 +17,14 @@ const val ERROR_ID_CONNECTION_TIMEOUT: String = "ConnectionTimeout"
 class ProgramsViewModel : BaseViewModel {
     companion object : KLogging()
 
-    private var serverApiFactory: ServerApiFactory
+    private var programsRepository: ProgramsRepository
     private val programs = MutableLiveData<List<Program>>()
     private val programStates = MutableLiveData<Map<String, ProgramState>>()
     private val programsLoadInProgress = MutableLiveData<Boolean>()
     private val programsLoadError = MutableLiveData<ConnectionError>()
 
-    @Inject constructor(serverApiFactory: ServerApiFactory) : super()  {
-        this.serverApiFactory = serverApiFactory
+    @Inject constructor(programsRepository: ProgramsRepository) : super()  {
+        this.programsRepository = programsRepository
         programsLoadInProgress.value = false
     }
 
@@ -37,7 +37,7 @@ class ProgramsViewModel : BaseViewModel {
         programsLoadInProgress.value = true
 
         try {
-            doLoadPrograms()
+            loadPrograms()
         } catch (e: ServerApiFactory.InvalidConnectionSettingsException) {
             logger.warn("loadPrograms() exception: $e")
             programsLoadInProgress.value = false
@@ -46,8 +46,8 @@ class ProgramsViewModel : BaseViewModel {
         return programs
     }
 
-    private fun doLoadPrograms() {
-        serverApiFactory.create()
+    private fun loadPrograms() {
+        programsRepository
             .getPrograms()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -63,16 +63,6 @@ class ProgramsViewModel : BaseViewModel {
                     setConnectionErrorTimeout()
                 }
             )
-    }
-
-    private fun createServerApi(): ServerApi? {
-        try {
-            return serverApiFactory.create()
-        } catch (e: ServerApiFactory.InvalidConnectionSettingsException) {
-            logger.warn("loadPrograms() exception: $e")
-            setConnectionErrorInvalidConnectionSettings()
-        }
-        return null
     }
 
     private fun setConnectionErrorInvalidConnectionSettings() {
@@ -100,17 +90,22 @@ class ProgramsViewModel : BaseViewModel {
     }
 
     fun programStates(): LiveData<Map<String, ProgramState>> {
-        val serverApi = createServerApi()
-        if (serverApi != null) {
-            serverApi?.getProgramStates()
+        try {
+            programsRepository.getProgramStates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMapIterable { it }
-                .toMap({ it.programId }, { it })
                 .subscribe(
                     { map -> programStates.value = map },
-                    { error -> logger.warn("getProgramStates(): $error") }
+                    { error ->
+                        run {
+                            logger.warn("getProgramStates(): $error")
+                            programStates.postValue(Collections.emptyMap())
+                        }
+                    }
                 )
+        } catch (e: ServerApiFactory.InvalidConnectionSettingsException) {
+            logger.warn("loadProgramStates() exception: $e")
+            setConnectionErrorInvalidConnectionSettings()
         }
         return programStates
     }

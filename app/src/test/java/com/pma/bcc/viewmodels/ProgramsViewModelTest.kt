@@ -6,11 +6,7 @@ import com.pma.bcc.R
 import com.pma.bcc.TrampolineSchedulerRule
 import com.pma.bcc.argCaptor
 import com.pma.bcc.mock
-import com.pma.bcc.model.NavigationTarget
-import com.pma.bcc.model.Program
-import com.pma.bcc.model.ProgramState
-import com.pma.bcc.model.TargetId
-import com.pma.bcc.net.ServerApi
+import com.pma.bcc.model.*
 import com.pma.bcc.net.ServerApiFactory
 import io.reactivex.Observable
 import junit.framework.Assert.*
@@ -19,17 +15,15 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers.any
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import java.io.IOException
 
 class ProgramsViewModelTest {
     private lateinit var viewModel: ProgramsViewModel
-    private val serverApiFactory: ServerApiFactory = mock()
-    private val serverApi: ServerApi = mock()
+    private val programsRepository: ProgramsRepository = mock()
     private val programsObserver: Observer<List<Program>> = mock()
     private val programsLoadConnectionErrorObserver: Observer<ConnectionError> = mock()
-    private val programsStateObserver: Observer<Map<String, ProgramState>> = mock()
+    private val programStatesObserver: Observer<Map<String, ProgramState>> = mock()
     private val programsLoadInProgressObserver: Observer<Boolean> = mock()
     private val navigationEventsObserver: Observer<NavigationTarget> = mock()
     private lateinit var programsArgumentCaptor: ArgumentCaptor<List<Program>>
@@ -44,10 +38,9 @@ class ProgramsViewModelTest {
 
     @Before
     fun before() {
-        `when`(serverApiFactory.create()).thenReturn(serverApi)
-        `when`(serverApi.getPrograms()).thenReturn(Observable.just(fakePrograms()))
-        `when`(serverApi.getProgramStates()).thenReturn(Observable.just(fakeProgramStates()))
-        viewModel = ProgramsViewModel(serverApiFactory)
+        `when`(programsRepository.getPrograms()).thenReturn(Observable.just(fakePrograms()))
+        `when`(programsRepository.getProgramStates()).thenReturn(Observable.just(fakeProgramStates()))
+        viewModel = ProgramsViewModel(programsRepository)
 
         programsArgumentCaptor = argCaptor()
         errorArgumentCaptor = argCaptor()
@@ -64,18 +57,18 @@ class ProgramsViewModelTest {
         return programs
     }
 
-    private fun fakeProgramStates() : List<ProgramState> {
-        val data = ArrayList<ProgramState>()
-        data.add(ProgramState("1", "", 18.6, true, false))
-        data.add(ProgramState("2", "", 18.2, false, false))
-        data.add(ProgramState("3", "", 19.2, false, false))
+    private fun fakeProgramStates() : Map<String, ProgramState> {
+        val data = HashMap<String, ProgramState>()
+        data["1"] = ProgramState("1", "", 18.6, true, false)
+        data["2"] = ProgramState("2", "", 18.2, false, false)
+        data["3"] = ProgramState("3", "", 19.2, false, false)
         return data
     }
 
     private fun observeViewModel() {
         viewModel.programsLoadInProgress().observeForever(programsLoadInProgressObserver)
         viewModel.programs().observeForever(programsObserver)
-        viewModel.programStates().observeForever(programsStateObserver)
+        viewModel.programStates().observeForever(programStatesObserver)
         viewModel.programsLoadError().observeForever(programsLoadConnectionErrorObserver)
         viewModel.navigationEvents().observeForever(navigationEventsObserver)
     }
@@ -102,23 +95,23 @@ class ProgramsViewModelTest {
     fun whenProgramsAndStatesWereRequested_thenTheyShouldBeDeliveredInCorrectOrder() {
         observeViewModel()
 
-        val inOrder= inOrder(programsObserver, programsStateObserver, programsLoadInProgressObserver)
+        val inOrder= inOrder(programsObserver, programStatesObserver, programsLoadInProgressObserver)
         inOrder.verify(programsLoadInProgressObserver).onChanged(false)
         inOrder.verify(programsLoadInProgressObserver).onChanged(true)
         inOrder.verify(programsLoadInProgressObserver).onChanged(false)
         inOrder.verify(programsObserver).onChanged(any<List<Program>>())
-        inOrder.verify(programsStateObserver).onChanged(any<Map<String, ProgramState>>())
+        inOrder.verify(programStatesObserver).onChanged(any<Map<String, ProgramState>>())
     }
 
     @Test
     fun whenStatesAndProgramsWereRequested_thenTheyShouldBeDeliveredInCorrectOrder() {
         viewModel.programsLoadInProgress().observeForever(programsLoadInProgressObserver)
-        viewModel.programStates().observeForever(programsStateObserver)
+        viewModel.programStates().observeForever(programStatesObserver)
         viewModel.programs().observeForever(programsObserver)
 
-        val inOrder= inOrder(programsObserver, programsStateObserver, programsLoadInProgressObserver)
+        val inOrder= inOrder(programsObserver, programStatesObserver, programsLoadInProgressObserver)
         inOrder.verify(programsLoadInProgressObserver).onChanged(false)
-        inOrder.verify(programsStateObserver).onChanged(any<Map<String, ProgramState>>())
+        inOrder.verify(programStatesObserver).onChanged(any<Map<String, ProgramState>>())
         inOrder.verify(programsLoadInProgressObserver).onChanged(true)
         inOrder.verify(programsLoadInProgressObserver).onChanged(false)
         inOrder.verify(programsObserver).onChanged(programsArgumentCaptor.capture())
@@ -129,13 +122,14 @@ class ProgramsViewModelTest {
 
     @Test
     fun whenConnectionSetupHasNotBeenDone_thenDisplayInformationToEnterConnectionSettingsBeforeAttemptingToConnect() {
-        `when`(serverApiFactory.create()).thenThrow(ServerApiFactory.InvalidConnectionSettingsException())
+        `when`(programsRepository.getPrograms()).thenThrow(ServerApiFactory.InvalidConnectionSettingsException())
+        `when`(programsRepository.getProgramStates()).thenThrow(ServerApiFactory.InvalidConnectionSettingsException())
 
         observeViewModel()
 
         verify(navigationEventsObserver, never()).onChanged(any(NavigationTarget::class.java))
         verify(programsObserver, never()).onChanged(any<List<Program>>())
-        verify(programsStateObserver, never()).onChanged(any<Map<String, ProgramState>>())
+        verify(programStatesObserver, never()).onChanged(any<Map<String, ProgramState>>())
 
         val errorArgCaptor = ArgumentCaptor.forClass(ConnectionError::class.java)
         val inOrder = inOrder(programsLoadInProgressObserver, programsLoadConnectionErrorObserver)
@@ -153,7 +147,7 @@ class ProgramsViewModelTest {
 
     @Test
     fun whenErrorWasReportedWithRetryAvailableButErrorCauseIsStillValid_thenRetryAttemptShouldGenerateTheErrorAgain() {
-        `when`(serverApi.getPrograms()).thenReturn(object: Observable<List<Program>>() {
+        `when`(programsRepository.getPrograms()).thenReturn(object: Observable<List<Program>>() {
             override fun subscribeActual(observer: io.reactivex.Observer<in List<Program>>) {
                 observer.onError(IOException())
             }
@@ -171,15 +165,15 @@ class ProgramsViewModelTest {
 
     @Test
     fun whenErrorWasReportedWithRetryAvailableAndErrorCauseWasRemoved_thenRetryAttemptShouldClearTheErrorAndRepeatFailedOperation() {
-        `when`(serverApi.getPrograms()).thenReturn(object: Observable<List<Program>>() {
+        `when`(programsRepository.getPrograms()).thenReturn(object: Observable<List<Program>>() {
             override fun subscribeActual(observer: io.reactivex.Observer<in List<Program>>) {
                 observer.onError(IOException())
             }
         })
         observeViewModel()
 
-        reset(serverApi)
-        `when`(serverApi.getPrograms()).thenReturn(Observable.just(fakePrograms()))
+        reset(programsRepository)
+        `when`(programsRepository.getPrograms()).thenReturn(Observable.just(fakePrograms()))
 
         viewModel.retry()
 
@@ -199,12 +193,12 @@ class ProgramsViewModelTest {
 
     @Test
     fun whenErrorWasReportedWithRetryUnavailable_thenRetryAttemptShouldBeIgnored() {
-        `when`(serverApiFactory.create()).thenThrow(ServerApiFactory.InvalidConnectionSettingsException())
+        `when`(programsRepository.getPrograms()).thenThrow(ServerApiFactory.InvalidConnectionSettingsException())
 
         observeViewModel()
 
-        reset(serverApiFactory)
-        `when`(serverApiFactory.create()).thenReturn(serverApi)
+        reset(programsRepository)
+        `when`(programsRepository.getPrograms()).thenReturn(Observable.just(fakePrograms()))
         viewModel.retry()
 
         val inOrder = inOrder(programsObserver, programsLoadInProgressObserver, programsLoadConnectionErrorObserver)
@@ -219,7 +213,7 @@ class ProgramsViewModelTest {
 
     @Test
     fun whenErrorWasReportedWithExtraAction_thenChoosingExtraActionShouldTriggerProperBehavior() {
-        `when`(serverApiFactory.create()).thenThrow(ServerApiFactory.InvalidConnectionSettingsException())
+        `when`(programsRepository.getPrograms()).thenThrow(ServerApiFactory.InvalidConnectionSettingsException())
 
         observeViewModel()
 
