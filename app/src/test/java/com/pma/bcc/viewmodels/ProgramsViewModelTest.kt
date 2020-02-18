@@ -67,8 +67,8 @@ class ProgramsViewModelTest {
 
     private fun observeViewModel() {
         viewModel.programsLoadInProgress().observeForever(programsLoadInProgressObserver)
-        viewModel.programs().observeForever(programsObserver)
-        viewModel.programStates().observeForever(programStatesObserver)
+        viewModel.getPrograms().observeForever(programsObserver)
+        viewModel.getProgramStates().observeForever(programStatesObserver)
         viewModel.programsLoadError().observeForever(programsLoadConnectionErrorObserver)
         viewModel.navigationEvents().observeForever(navigationEventsObserver)
     }
@@ -106,8 +106,8 @@ class ProgramsViewModelTest {
     @Test
     fun whenStatesAndProgramsWereRequested_thenTheyShouldBeDeliveredInCorrectOrder() {
         viewModel.programsLoadInProgress().observeForever(programsLoadInProgressObserver)
-        viewModel.programStates().observeForever(programStatesObserver)
-        viewModel.programs().observeForever(programsObserver)
+        viewModel.getProgramStates().observeForever(programStatesObserver)
+        viewModel.getPrograms().observeForever(programsObserver)
 
         val inOrder= inOrder(programsObserver, programStatesObserver, programsLoadInProgressObserver)
         inOrder.verify(programsLoadInProgressObserver).onChanged(false)

@@ -5,6 +5,7 @@ import com.pma.bcc.model.ProgramState
 import io.reactivex.Observable
 import com.pma.bcc.model.ThermSensor
 import retrofit2.http.GET
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ServerApi {
@@ -15,9 +16,12 @@ interface ServerApi {
     @GET("programs")
     fun getPrograms() : Observable<List<Program>>
 
+    @PUT("programs/{id}")
+    fun updateProgram(@Path(value="id") programId: String, program: Program) : Observable<Program>
+
     @GET("programs/states")
     fun getProgramStates() : Observable<List<ProgramState>>
 
     @GET("programs/states/{id}")
-    fun getProgramState(@Path(value="id") programId: String) : Observable<ProgramState>
+    fun getProgramState(@Path(value="id") programId: String) : Observable<ProgramState?>
 }

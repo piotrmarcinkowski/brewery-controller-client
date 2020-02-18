@@ -9,7 +9,7 @@ open class ProgramsRepositoryImpl(private val serverApiFactory : ServerApiFactor
     ProgramsRepository {
     private var cachedSensors = emptyList<ThermSensor>()
     private var cachedPrograms = emptyList<Program>()
-    private var cachedProgramStates = emptyMap<String, ProgramState>()
+    private var cachedProgramStates: HashMap<String, ProgramState>? = null
 
     override fun getThermSensors() : Observable<List<ThermSensor>> {
         if (cachedSensors.isEmpty()) {
@@ -35,22 +35,49 @@ open class ProgramsRepositoryImpl(private val serverApiFactory : ServerApiFactor
         }
     }
 
+    override fun updateProgram(program: Program): Observable<Program> {
+        return serverApiFactory.create()
+            .updateProgram(program.id, program)
+            .doOnNext {
+                cachedPrograms = cachedPrograms.map { if (it.id == program.id) program else it }
+            }
+    }
+
     override fun getProgramStates(): Observable<Map<String, ProgramState>> {
-        if (cachedProgramStates.isEmpty()) {
-            return serverApiFactory.create()
-                .getProgramStates()
-                .flatMapIterable { it }
-                .toMap({ it.programId }, { it })
-                .toObservable()
-                .doOnNext { cachedProgramStates = it }
+        if (cachedProgramStates == null) {
+            return fetchProgramStates()
+                .doOnNext {
+                    cachedProgramStates = HashMap()
+                    cachedProgramStates!!.putAll(it)}
         }
         else {
-            return Observable.just(cachedProgramStates)
-                .mergeWith(serverApiFactory.create().getProgramStates()
-                .flatMapIterable { it }
-                .toMap({ it.programId }, { it })
-                .toObservable())
-                .doOnNext { cachedProgramStates = it }
+            return Observable.just(cachedProgramStates as Map<String, ProgramState>)
+                .mergeWith(fetchProgramStates())
+                .doOnNext {
+                    val hashMap = cachedProgramStates as HashMap<String, ProgramState>
+                    hashMap.putAll(it)}
+        }
+    }
+
+    private fun fetchProgramStates(): Observable<Map<String, ProgramState>> {
+        return serverApiFactory.create()
+            .getProgramStates()
+            .flatMapIterable { it }
+            .toMap({ it.programId }, { it })
+            .toObservable()
+    }
+
+    override fun getProgramState(programId: String): Observable<ProgramState?> {
+        if (cachedProgramStates == null) {
+            return serverApiFactory.create()
+                .getProgramState(programId)
+        }
+        else {
+            return Observable.just(cachedProgramStates!![programId])
+                .mergeWith(serverApiFactory.create().getProgramState(programId))
+                .doOnNext {
+                    if (it != null) cachedProgramStates!![programId] = it
+                }
         }
     }
 }

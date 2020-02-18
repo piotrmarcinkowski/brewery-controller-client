@@ -5,10 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import com.pma.bcc.R
 import com.pma.bcc.model.*
 import com.pma.bcc.net.ServerApiFactory
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import mu.KLogging
 import java.util.*
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 const val ERROR_ID_CONNECTION_SETTINGS: String = "ConnectionSettings"
@@ -22,16 +25,17 @@ class ProgramsViewModel : BaseViewModel {
     private val programStates = MutableLiveData<Map<String, ProgramState>>()
     private val programsLoadInProgress = MutableLiveData<Boolean>()
     private val programsLoadError = MutableLiveData<ConnectionError>()
+    private var periodicSubscribeDisposable: Disposable? = null
 
     @Inject constructor(programsRepository: ProgramsRepository) : super()  {
         this.programsRepository = programsRepository
         programsLoadInProgress.value = false
     }
 
-    fun programs(): LiveData<List<Program>> {
-        logger.info("loadPrograms()")
+    fun getPrograms(): LiveData<List<Program>> {
+        logger.info("getPrograms()")
         if (programsLoadError.value != null) {
-            logger.info("loadProgram clearing error: ${programsLoadError.value}")
+            logger.info("getPrograms() clearing error: ${programsLoadError.value}")
             programsLoadError.value = null
         }
         programsLoadInProgress.value = true
@@ -39,7 +43,7 @@ class ProgramsViewModel : BaseViewModel {
         try {
             loadPrograms()
         } catch (e: ServerApiFactory.InvalidConnectionSettingsException) {
-            logger.warn("loadPrograms() exception: $e")
+            logger.warn("getPrograms() exception: $e")
             programsLoadInProgress.value = false
             setConnectionErrorInvalidConnectionSettings()
         }
@@ -53,12 +57,12 @@ class ProgramsViewModel : BaseViewModel {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { list ->
-                    logger.warn("getPrograms(): $list")
+                    logger.warn("loadPrograms(): $list")
                     programsLoadInProgress.value = false
                     programs.value = list
                 },
                 { error ->
-                    logger.warn("getPrograms(): $error")
+                    logger.warn("loadPrograms(): $error")
                     programsLoadInProgress.value = false
                     setConnectionErrorTimeout()
                 }
@@ -89,17 +93,24 @@ class ProgramsViewModel : BaseViewModel {
         )
     }
 
-    fun programStates(): LiveData<Map<String, ProgramState>> {
+    fun getProgramStates(): LiveData<Map<String, ProgramState>> {
+        loadProgramStates()
+        return programStates
+    }
+
+    private fun loadProgramStates() {
+        logger.info("reloadProgramStates()")
         try {
-            programsRepository.getProgramStates()
+            programsRepository
+                .getProgramStates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { map -> programStates.value = map },
                     { error ->
                         run {
-                            logger.warn("getProgramStates(): $error")
-                            programStates.postValue(Collections.emptyMap())
+                            logger.warn("loadProgramStates(): $error")
+                            programStates.value = Collections.emptyMap()
                         }
                     }
                 )
@@ -107,7 +118,6 @@ class ProgramsViewModel : BaseViewModel {
             logger.warn("loadProgramStates() exception: $e")
             setConnectionErrorInvalidConnectionSettings()
         }
-        return programStates
     }
 
     fun programsLoadInProgress(): LiveData<Boolean> {
@@ -136,8 +146,8 @@ class ProgramsViewModel : BaseViewModel {
             return
         }
         when(error.errorId) {
-            ERROR_ID_CONNECTION_SETTINGS -> programs()
-            ERROR_ID_CONNECTION_TIMEOUT -> programs()
+            ERROR_ID_CONNECTION_SETTINGS -> getPrograms()
+            ERROR_ID_CONNECTION_TIMEOUT -> getPrograms()
             else -> logger.warn("retry() no action for error: ${error.errorId}")
         }
     }
@@ -159,5 +169,35 @@ class ProgramsViewModel : BaseViewModel {
             ERROR_ID_CONNECTION_TIMEOUT -> navigateTo(NavigationTarget(TargetId.ConnectionSettings))
             else -> logger.warn("extraAction() no action for error: ${error.errorId}")
         }
+    }
+
+    fun resume() {
+        startUpdatingProgramStates()
+    }
+
+    fun pause() {
+        stopUpdatingProgramStates()
+    }
+
+    private fun startUpdatingProgramStates() {
+        startUpdatingProgramStates(UPDATE_INTERVAL)
+    }
+
+    private fun startUpdatingProgramStates(interval: Long) {
+        if (periodicSubscribeDisposable != null && !periodicSubscribeDisposable!!.isDisposed) {
+            return
+        }
+
+        periodicSubscribeDisposable = Observable.interval(0, interval,
+            TimeUnit.MILLISECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                logger.info("Update program states")
+                loadProgramStates() },
+                { error -> ProgramDetailsViewModel.logger.warn("startUpdatingProgramStates() onError: $error") })
+    }
+
+    private fun stopUpdatingProgramStates() {
+        periodicSubscribeDisposable?.dispose()
     }
 }

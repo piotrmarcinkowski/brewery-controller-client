@@ -25,7 +25,13 @@ class ProgramView : FrameLayout {
     }
 
     private fun init() {
-        binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.program, this, true)
+        if (isInEditMode) {
+            LayoutInflater.from(context).inflate(R.layout.program, this, true)
+        }
+        else {
+            binding = DataBindingUtil.inflate(
+                LayoutInflater.from(context), R.layout.program, this, true)
+        }
     }
 
     var programDataViewModel : ProgramDataViewModel?

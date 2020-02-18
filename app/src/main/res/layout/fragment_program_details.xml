@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout >
     <data>
+        <import type="android.view.View"/>
         <variable
                 name="viewModel"
                 type="com.pma.bcc.viewmodels.ProgramDetailsViewModel" />
@@ -34,9 +35,20 @@
 
             <TextView
                     android:id="@+id/text_program_active"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{viewModel.programIsActiveText}" />
+                    android:layout_weight="1"
+                    android:text="@{viewModel.programIsActiveText}"
+                    tools:text="@string/program_details_program_active"/>
+
+            <ProgressBar
+                    android:id="@+id/progress_program_active_updating"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_marginLeft="20dp"
+                    android:indeterminate="true"
+                    android:visibility="@{viewModel.programIsActiveUpdating ? View.VISIBLE : View.INVISIBLE}"
+                    />
 
             <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switch_program_active"
@@ -44,6 +56,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:checked="@{viewModel.programIsActive}"
+                    android:enabled="@{!viewModel.programIsActiveUpdating}"
+                    android:onCheckedChanged="@{() -> viewModel.toggleProgramActive()}"/>
+                    tools:checked="true"
                     />
 
         </LinearLayout>

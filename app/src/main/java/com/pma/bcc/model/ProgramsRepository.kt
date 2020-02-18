@@ -9,5 +9,9 @@ interface ProgramsRepository {
     @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
     fun getProgramStates(): Observable<Map<String, ProgramState>>
     @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
+    fun getProgramState(programId: String): Observable<ProgramState?>
+    @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
     fun getThermSensors() : Observable<List<ThermSensor>>
+    @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
+    fun updateProgram(program: Program) : Observable<Program>
 }

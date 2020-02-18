@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.pma.bcc.R
 import com.pma.bcc.adapters.ProgramsRecyclerViewAdapter
 import com.pma.bcc.adapters.ProgramsRecyclerViewAdapter.ItemClickListener
@@ -24,7 +25,7 @@ import javax.inject.Inject
 class ProgramsFragment : DaggerFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var model: ProgramsViewModel
+    private lateinit var viewModel: ProgramsViewModel
     private lateinit var programsRecyclerViewAdapter: ProgramsRecyclerViewAdapter
 
     override fun onCreateView(
@@ -33,58 +34,70 @@ class ProgramsFragment : DaggerFragment() {
     ): View? {
         var view = inflater.inflate(R.layout.fragment_programs, container, false)
 
-        model = ViewModelProviders.of(this, viewModelFactory).get(ProgramsViewModel::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ProgramsViewModel::class.java)
 
         initProgramsRecyclerView(view)
         initProgramsLoadObservers(view)
         initNavigationEventsObserver()
-        loadPrograms()
-        startRefreshingProgramsState()
+        observePrograms()
+        observeProgramsStates()
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.resume()
+    }
+
+    override fun onPause() {
+        viewModel.pause()
+        super.onPause()
     }
 
     private fun initProgramsRecyclerView(view: View) {
         programsRecyclerViewAdapter = ProgramsRecyclerViewAdapter(object : ItemClickListener {
             override fun onItemClick(program: Program) {
-                model.showProgramDetails(program)
+                viewModel.showProgramDetails(program)
             }
         })
+        (view.programs_recycler_view.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
+        view.programs_recycler_view.itemAnimator?.changeDuration = 0
         view.programs_recycler_view.adapter = programsRecyclerViewAdapter
     }
 
     private fun initProgramsLoadObservers(view: View) {
-        model.programsLoadInProgress().observe(viewLifecycleOwner, Observer {
+        viewModel.programsLoadInProgress().observe(viewLifecycleOwner, Observer {
             if (it) view.progress_loading.visibility = View.VISIBLE
             else view.progress_loading.visibility = View.GONE
         })
-        model.programsLoadError().observe(viewLifecycleOwner, Observer {
+        viewModel.programsLoadError().observe(viewLifecycleOwner, Observer {
             val viewConnectionError = view.view_connection_error
             viewConnectionError.setConnectionError(it)
             viewConnectionError.buttonClickListener = object: ConnectionErrorView.ButtonsClickListener {
                 override fun onRetry() {
-                    model.retry()
+                    viewModel.retry()
                 }
 
                 override fun onExtraAction() {
-                    model.extraAction()
+                    viewModel.extraAction()
                 }
             }
         })
     }
 
-    private fun loadPrograms() {
-        model.programs()
+    private fun observePrograms() {
+        viewModel.getPrograms()
             .observe(viewLifecycleOwner, Observer { programsRecyclerViewAdapter.setPrograms(it) })
     }
 
     private fun initNavigationEventsObserver() {
-        model.navigationEvents().observe(viewLifecycleOwner, Observer {
+        viewModel.navigationEvents().observe(viewLifecycleOwner, Observer {
             Navigation.navigateTo(findNavController(), it)
         })
     }
 
-    private fun startRefreshingProgramsState() {
-        model.programStates().observe(
+    private fun observeProgramsStates() {
+        viewModel.getProgramStates().observe(
             viewLifecycleOwner,
             Observer { programsRecyclerViewAdapter.setProgramStates(it) })
     }

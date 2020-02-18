@@ -7,8 +7,10 @@ import com.pma.bcc.model.ThermSensor
 import io.reactivex.Observable
 import io.reactivex.Observer
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 class FakeServerApiFactoryImpl : ServerApiFactory {
 
@@ -42,11 +44,19 @@ class FakeServerApiFactoryImpl : ServerApiFactory {
                 return Observable.just(fakePrograms())
             }
 
+            override fun updateProgram(programId: String, program: Program): Observable<Program> {
+                return Observable.create<Program> { emitter ->
+                    Thread.sleep(5000)
+                    emitter.onNext(program)
+                    emitter.onComplete()
+                }
+            }
+
             override fun getProgramStates(): Observable<List<ProgramState>> {
                 return Observable.just(fakeProgramStates())
             }
 
-            override fun getProgramState(programId: String): Observable<ProgramState> {
+            override fun getProgramState(programId: String): Observable<ProgramState?> {
                 return Observable.just(fakeProgramStates().first { state -> state.programId == programId })
             }
         }
@@ -74,10 +84,15 @@ class FakeServerApiFactoryImpl : ServerApiFactory {
     }
 
     private fun fakeProgramStates() : List<ProgramState> {
+        val random = Random()
         val data = ArrayList<ProgramState>()
-        data.add(ProgramState("1", "", 18.6, true, false))
-        data.add(ProgramState("2", "", 18.2, false, true))
-        data.add(ProgramState("3", "", 19.2, false, false))
+        data.add(ProgramState("1", "", randomTemp(random, 17.0, 18.0), random.nextBoolean(), false))
+        data.add(ProgramState("2", "", randomTemp(random, 17.0, 18.0), false, random.nextBoolean()))
+        data.add(ProgramState("3", "", randomTemp(random, 17.0, 18.0), false, false))
         return data
+    }
+
+    private fun randomTemp(random: Random, min: Double, max: Double) : Double {
+        return min + (max - min) * random.nextDouble()
     }
 }

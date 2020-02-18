@@ -43,6 +43,7 @@ class ProgramDetailsFragment : DaggerFragment() {
         viewModel.getProgram().observe(viewLifecycleOwner, Observer { program -> onProgramChanged(program)})
         viewModel.getProgramState().observe(viewLifecycleOwner, Observer { programState -> onProgramStateChanged(programState)})
 
+        binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
         return binding.root

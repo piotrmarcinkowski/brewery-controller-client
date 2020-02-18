@@ -1,5 +1,6 @@
 package com.pma.bcc.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,11 +13,14 @@ import com.pma.bcc.viewmodels.ProgramDataViewModel
 import kotlinx.android.synthetic.main.program_grid_item.view.*
 import java.util.*
 
-class ProgramsRecyclerViewAdapter(
-    private val itemClickListener : ItemClickListener
+class ProgramsRecyclerViewAdapter : RecyclerView.Adapter<ViewHolder> {
 
-) : RecyclerView.Adapter<ViewHolder>() {
+    constructor(itemClickListener : ItemClickListener) {
+        this.itemClickListener = itemClickListener
+        setHasStableIds(true)
+    }
 
+    private val itemClickListener: ItemClickListener
     private var programs : List<Program> = Collections.emptyList()
     private var programStates : Map<String, ProgramState> = Collections.emptyMap()
 
@@ -25,11 +29,13 @@ class ProgramsRecyclerViewAdapter(
     }
 
     fun setPrograms(programs: List<Program>) {
+        Log.d("Adapter", "setPrograms: $programs")
         this.programs = programs
         notifyDataSetChanged()
     }
 
     fun setProgramStates(programStates: Map<String, ProgramState>) {
+        Log.d("Adapter", "setProgramStates: $programStates")
         this.programStates = programStates
         notifyDataSetChanged()
     }
@@ -40,6 +46,10 @@ class ProgramsRecyclerViewAdapter(
 
     override fun getItemCount(): Int {
         return programs.size
+    }
+
+    override fun getItemId(position: Int): Long {
+        return programs[position].id.hashCode().toLong()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
