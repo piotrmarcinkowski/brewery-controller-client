@@ -9,11 +9,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import com.pma.bcc.R
 import com.pma.bcc.databinding.FragmentProgramDetailsBinding
 import com.pma.bcc.model.Program
 import com.pma.bcc.model.ProgramState
 import com.pma.bcc.model.TargetArgumentKey
+import com.pma.bcc.view.Navigation
 import com.pma.bcc.view.ProgramView
 import com.pma.bcc.viewmodels.ProgramDataViewModel
 import com.pma.bcc.viewmodels.ProgramDetailsViewModel
@@ -46,6 +48,8 @@ class ProgramDetailsFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
+        initNavigationEventsObserver()
+
         return binding.root
     }
 
@@ -71,5 +75,11 @@ class ProgramDetailsFragment : DaggerFragment() {
 
     private fun updateProgramView() {
         programView.programDataViewModel = ProgramDataViewModel(program, programState)
+    }
+
+    private fun initNavigationEventsObserver() {
+        viewModel.navigationEvents().observe(viewLifecycleOwner, Observer {
+            Navigation.navigateTo(findNavController(), it)
+        })
     }
 }

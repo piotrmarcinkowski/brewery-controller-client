@@ -1,11 +1,10 @@
 package com.pma.bcc.viewmodels
 
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.pma.bcc.R
-import com.pma.bcc.model.Program
-import com.pma.bcc.model.ProgramState
-import com.pma.bcc.model.ProgramsRepository
+import com.pma.bcc.model.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -186,5 +185,12 @@ class ProgramDetailsViewModel : BaseViewModel {
         periodicSubscribeDisposable?.dispose()
     }
 
+    fun onClickBack(view: View){
+        navigateBack()
+    }
 
+    fun onClickEdit(view: View){
+        navigateTo(NavigationTarget(TargetId.ProgramEdit)
+            .addArg(TargetArgumentKey.ProgramEditProgram, program.value!!))
+    }
 }

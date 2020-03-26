@@ -139,7 +139,8 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
-                android:text="@string/program_details_button_back" />
+                android:text="@string/program_details_button_back"
+                android:onClick="@{viewModel.onClickBack}" />
 
         <Button
                 android:id="@+id/button_edit_program"
@@ -148,7 +149,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:text="@string/program_details_button_edit"
-                style="@style/Widget.AppCompat.Button.Colored"/>
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:onClick="@{viewModel.onClickEdit}" />
 
     </LinearLayout>
 

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="android.view.View"/>
+        <variable
+                name="viewModel"
+                type="com.pma.bcc.viewmodels.ProgramEditViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            tools:context="com.pma.bcc.fragments.ProgramDetailsFragment">
+
+        <EditText
+                android:id="@+id/edit_program_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:text="@={viewModel.programName}"
+                android:hint="@string/program_edit_name_hint"
+                android:singleLine="true"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/barrier"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        <EditText
+                android:id="@+id/edit_max_temp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@={viewModel.maxTemp}"
+                android:hint="@string/program_edit_max_temp_hint"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                app:layout_constraintTop_toBottomOf="@id/edit_program_name"
+                app:layout_constraintLeft_toLeftOf="@id/edit_program_name"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        <EditText
+                android:id="@+id/edit_min_temp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@={viewModel.minTemp}"
+                android:hint="@string/program_edit_min_temp_hint"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                app:layout_constraintTop_toBottomOf="@id/edit_max_temp"
+                app:layout_constraintLeft_toLeftOf="@id/edit_program_name"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        <Spinner
+                android:id="@+id/select_sensor"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/edit_min_temp"
+                app:layout_constraintLeft_toLeftOf="@id/edit_program_name"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        <Spinner
+                android:id="@+id/select_heating_relay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/select_sensor"
+                app:layout_constraintLeft_toLeftOf="@id/edit_program_name"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        <Spinner
+                android:id="@+id/select_cooling_relay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/select_heating_relay"
+                app:layout_constraintLeft_toLeftOf="@id/edit_program_name"
+                app:layout_constraintRight_toRightOf="parent" />
+
+        <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_program_active"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:checked="@{viewModel.programIsActive}"
+                android:enabled="@{!viewModel.programSaveInProgress}"
+                android:onCheckedChanged="@{() -> viewModel.toggleProgramActive()}"
+                app:layout_constraintTop_toBottomOf="@id/select_cooling_relay"
+                app:layout_constraintLeft_toLeftOf="@id/edit_program_name"
+                tools:checked="true" />
+
+        <TextView
+                android:id="@+id/text_program_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:labelFor="@+id/edit_program_name"
+                android:text="@string/program_edit_label_program_name"
+                app:layout_constraintBaseline_toBaselineOf="@id/edit_program_name"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+                android:id="@+id/text_max_temp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/edit_max_temp"
+                android:text="@string/program_edit_label_max_temp"
+                app:layout_constraintBaseline_toBaselineOf="@id/edit_max_temp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_program_name_label" />
+
+        <TextView
+                android:id="@+id/text_min_temp_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/edit_min_temp"
+                android:text="@string/program_edit_label_min_temp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/edit_min_temp" />
+
+        <TextView
+                android:id="@+id/text_sensor_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/select_sensor"
+                android:text="@string/program_edit_label_therm_sensor"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/select_sensor" />
+
+        <TextView
+                android:id="@+id/text_heating_relay_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/program_edit_label_heating_relay_index"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/select_heating_relay" />
+
+        <TextView
+                android:id="@+id/text_cooling_relay_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/program_edit_label_cooling_relay_index"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/select_cooling_relay" />
+
+        <TextView
+                android:id="@+id/text_program_active_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/program_edit_label_program_active"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@id/switch_program_active" />
+
+        <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="end"
+                app:constraint_referenced_ids="text_sensor_label,text_heating_relay_label,text_program_name_label,text_cooling_relay_label,text_max_temp_label,text_min_temp_label" />
+
+        <LinearLayout
+                android:id="@+id/button_panel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/switch_program_active">
+
+            <Button
+                    android:id="@+id/button_back"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:text="@string/program_edit_button_back"
+                    android:onClick="@{viewModel.onClickBack}" />
+
+            <Button
+                    android:id="@+id/button_save_program"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:text="@string/program_edit_button_save"
+                    android:onClick="@{viewModel.onClickSave}" />
+
+        </LinearLayout>
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -3,9 +3,11 @@ package com.pma.bcc.di.modules
 import androidx.lifecycle.ViewModel
 import com.pma.bcc.di.ViewModelKey
 import com.pma.bcc.fragments.ProgramDetailsFragment
+import com.pma.bcc.fragments.ProgramEditFragment
 import com.pma.bcc.fragments.ProgramsFragment
 import com.pma.bcc.fragments.SettingsFragment
 import com.pma.bcc.viewmodels.ProgramDetailsViewModel
+import com.pma.bcc.viewmodels.ProgramEditViewModel
 import com.pma.bcc.viewmodels.ProgramsViewModel
 import com.pma.bcc.viewmodels.SettingsViewModel
 import dagger.Binds
@@ -25,6 +27,11 @@ abstract class FragmentBuildersModule {
         modules = [ProgramsDetailsViewModelsModule::class]
     )
     abstract fun contributeProgramDetailsFragment(): ProgramDetailsFragment
+
+    @ContributesAndroidInjector(
+        modules = [ProgramsEditViewModelsModule::class]
+    )
+    abstract fun contributeProgramEditFragment(): ProgramEditFragment
 
     @ContributesAndroidInjector(
         modules = [SettingsViewModelsModule::class]
@@ -57,4 +64,13 @@ abstract class ProgramsDetailsViewModelsModule {
     @IntoMap
     @ViewModelKey(ProgramDetailsViewModel::class)
     abstract fun bindProgramDetailsViewModel(viewModel: ProgramDetailsViewModel): ViewModel
+}
+
+@Module
+abstract class ProgramsEditViewModelsModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProgramEditViewModel::class)
+    abstract fun bindProgramEditViewModel(viewModel: ProgramEditViewModel): ViewModel
 }

@@ -3,6 +3,7 @@ package com.pma.bcc.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.pma.bcc.model.NavigationTarget
+import com.pma.bcc.model.TargetId
 import mu.KLogging
 
 open class BaseViewModel : ViewModel() {
@@ -13,6 +14,11 @@ open class BaseViewModel : ViewModel() {
     fun navigateTo(target: NavigationTarget) {
         logger.info("Navigating to $target")
         navigationEvents.value = target
+    }
+
+    fun navigateBack() {
+        logger.info("Navigating back")
+        navigationEvents.value = NavigationTarget(TargetId.Back)
     }
 
     fun navigationEvents() : LiveData<NavigationTarget> {

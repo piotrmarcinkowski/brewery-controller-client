@@ -33,7 +33,7 @@ data class Program (
         const val CRC_UNKNOWN = ""
     }
 
-    class Builder(program : Program?) {
+    class Builder(program : Program? = null) {
         private var id : String = program?.id ?: ID_UNKNOWN
         private var name : String = program?.name ?: DEFAULT_NAME
         private var sensorId : String = program?.sensorId ?: DEFAULT_SENSOR_ID

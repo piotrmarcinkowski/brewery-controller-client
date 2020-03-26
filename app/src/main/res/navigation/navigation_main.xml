@@ -20,12 +20,24 @@
     <fragment
             android:id="@+id/settingsFragment"
             android:name="com.pma.bcc.fragments.SettingsFragment"
-            android:label="SettingsFragment" />
+            android:label="SettingsFragment"/>
     <fragment
             android:id="@+id/programDetailsFragment"
             android:name="com.pma.bcc.fragments.ProgramDetailsFragment"
             android:label="ProgramStatusFragment"
             tools:layout="@layout/fragment_program_details">
+        <argument
+                android:name="program"
+                app:argType="com.pma.bcc.model.Program" />
+        <action
+                android:id="@+id/action_programDetailsFragment_to_programEditFragment"
+                app:destination="@id/programEditFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/programEditFragment"
+            android:name="com.pma.bcc.fragments.ProgramEditFragment"
+            android:label="ProgramEditFragment"
+            tools:layout="@layout/fragment_program_edit">
         <argument
                 android:name="program"
                 app:argType="com.pma.bcc.model.Program" />

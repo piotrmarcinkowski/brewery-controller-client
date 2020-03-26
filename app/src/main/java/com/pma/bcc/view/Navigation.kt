@@ -10,11 +10,15 @@ import mu.KLogging
 import java.io.Serializable
 
 class Navigation {
-    companion object : KLogging(){
+    companion object : KLogging() {
+
+        //TODO: Refactor to method
         fun navigateTo(navController: NavController, target: NavigationTarget) {
             logger.info("navigateTo() $target")
             when(target.targetId) {
+                TargetId.Back -> navController.popBackStack()
                 TargetId.ProgramDetails -> navController.navigate(R.id.action_programsFragment_to_programDetailsFragment, createProgramDetailsArgsBundle(target.getArgs()))
+                TargetId.ProgramEdit -> navController.navigate(R.id.action_programDetailsFragment_to_programEditFragment, createProgramEditArgsBundle(target.getArgs()))
                 TargetId.ConnectionSettings -> navController.navigate(R.id.action_programsFragment_to_settingsFragment)
                 else -> logger.warn("navigateTo() unknown target: $target")
             }
@@ -23,6 +27,12 @@ class Navigation {
         private fun createProgramDetailsArgsBundle(args: Map<TargetArgumentKey, Any>) : Bundle {
             var bundle = Bundle(args.size)
             bundle.putSerializable(TargetArgumentKey.ProgramDetailsProgram.name, args[TargetArgumentKey.ProgramDetailsProgram] as Serializable)
+            return bundle
+        }
+
+        private fun createProgramEditArgsBundle(args: Map<TargetArgumentKey, Any>) : Bundle {
+            var bundle = Bundle(args.size)
+            bundle.putSerializable(TargetArgumentKey.ProgramEditProgram.name, args[TargetArgumentKey.ProgramEditProgram] as Serializable)
             return bundle
         }
     }

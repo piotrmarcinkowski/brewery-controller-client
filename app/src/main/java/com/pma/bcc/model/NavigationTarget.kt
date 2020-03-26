@@ -4,13 +4,16 @@ import java.util.*
 import kotlin.collections.HashMap
 
 enum class TargetId {
+    Back,
     Programs,
     ProgramDetails,
+    ProgramEdit,
     ConnectionSettings
 }
 
 enum class TargetArgumentKey {
-    ProgramDetailsProgram
+    ProgramDetailsProgram,
+    ProgramEditProgram
 }
 
 open class NavigationTarget(val targetId: TargetId) {
