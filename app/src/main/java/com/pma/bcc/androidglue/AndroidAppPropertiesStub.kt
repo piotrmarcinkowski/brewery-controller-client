@@ -9,5 +9,6 @@ class AndroidAppPropertiesStub : AppProperties {
         get() = 8080
     override val apiBaseUrl: String
         get() = "/brewery/api/1.0"
-
+    override val numberOfRelays: Int
+        get() = 8
 }

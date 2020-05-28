@@ -4,4 +4,5 @@ interface AppProperties {
     val serverAddress : String
     val serverPort : Int
     val apiBaseUrl : String
+    val numberOfRelays : Int
 }

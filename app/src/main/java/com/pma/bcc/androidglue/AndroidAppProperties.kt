@@ -22,4 +22,8 @@ class AndroidAppProperties @Inject constructor(private val context: Context, pri
         get() = sharedPreferences.getString(
             context.getString(R.string.prefs_key_server_api_url_base),
             context.getString(R.string.prefs_server_api_url_base_default))
+    override val numberOfRelays: Int
+        get() = sharedPreferences.getString(
+            context.getString(R.string.prefs_key_number_of_relays),
+            context.getString(R.string.prefs_number_of_relays_default)).toInt()
 }

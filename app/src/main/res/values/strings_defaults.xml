@@ -2,4 +2,5 @@
 <resources>
     <string translatable="false" name="prefs_server_api_url_base_default">/brewery/api/v1.0/</string>
     <string translatable="false" name="prefs_server_port_default">8080</string>
+    <string translatable="false" name="prefs_number_of_relays_default">8</string>
 </resources>

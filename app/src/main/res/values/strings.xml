@@ -42,4 +42,5 @@
     <string name="programs_error_retry_button">Retry</string>
     <string name="programs_error_navigation_button_connection_settings">Settings</string>
     <string name="program_edit_title">Program Edit</string>
+    <string name="relay_display_string" formatted="false">Relay %1$d</string>
 </resources>

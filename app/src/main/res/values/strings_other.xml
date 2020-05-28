@@ -3,4 +3,5 @@
     <string translatable="false" name="prefs_key_server_address">prefs_server_address</string>
     <string translatable="false" name="prefs_key_server_port">prefs_server_port</string>
     <string translatable="false" name="prefs_key_server_api_url_base">prefs_server_api_url_base</string>
+    <string translatable="false" name="prefs_key_number_of_relays">prefs_number_of_relays</string>
 </resources>

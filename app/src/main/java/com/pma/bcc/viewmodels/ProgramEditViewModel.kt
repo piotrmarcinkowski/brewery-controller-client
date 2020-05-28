@@ -1,7 +1,6 @@
 package com.pma.bcc.viewmodels
 
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
@@ -9,14 +8,7 @@ import com.pma.bcc.R
 import com.pma.bcc.model.*
 import com.pma.bcc.utils.TemperatureFormatter
 import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 import mu.KLogging
-import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class ProgramEditViewModel : BaseViewModel {
@@ -24,23 +16,42 @@ class ProgramEditViewModel : BaseViewModel {
 
     private val programRepository: ProgramsRepository
     private val resourceProvider: ResourceProvider
+    private val appProperties: AppProperties
     val programName = MutableLiveData<String>()
     val maxTemp = MutableLiveData<String>()
     val minTemp = MutableLiveData<String>()
     private var programIsActive = MutableLiveData<Boolean>()
     val selectedSensorPosition = MutableLiveData<Int>()
-    var sensors: LiveData<List<ThermSensor>>
+    val selectedCoolingRelayPosition = MutableLiveData<Int>()
+    val selectedHeatingRelayPosition = MutableLiveData<Int>()
+    var sensors: LiveData<List<ThermSensor>>? = null
+    val relays = MutableLiveData<List<String>>()
     private var programHeatingRelay = MutableLiveData<String>()
     private var programCoolingRelay = MutableLiveData<String>()
     private var programSaveInProgress = MutableLiveData<Boolean>()
     private val programUpdateError = MutableLiveData<String>()
 
-    @Inject constructor(programRepository: ProgramsRepository, resourceProvider: ResourceProvider) : super()  {
+    @Inject constructor(programRepository: ProgramsRepository, resourceProvider: ResourceProvider, appProperties: AppProperties) : super()  {
         this.programRepository = programRepository
         this.resourceProvider = resourceProvider
+        this.appProperties = appProperties
 
+        initAvailableSensors()
+        initAvailableRelays()
+    }
+
+    private fun initAvailableSensors() {
         sensors = LiveDataReactiveStreams.fromPublisher(
-            programRepository.getThermSensors().toFlowable(BackpressureStrategy.BUFFER))
+            programRepository.getThermSensors().toFlowable(BackpressureStrategy.BUFFER)
+        )
+    }
+
+    private fun initAvailableRelays() {
+        val relays = mutableListOf<String>()
+        for (i in 0..appProperties.numberOfRelays) {
+            relays.add(resourceProvider.getString(R.string.relay_display_string, i))
+        }
+        this.relays.value = relays
     }
 
     fun setProgram(program: Program) {
@@ -49,6 +60,8 @@ class ProgramEditViewModel : BaseViewModel {
         minTemp.value = TemperatureFormatter.format(program.minTemp)
 
         selectedSensorPosition.value = 1
+        selectedCoolingRelayPosition.value = 1
+        selectedHeatingRelayPosition.value = 1
         //TODO: Initialize others
     }
 
