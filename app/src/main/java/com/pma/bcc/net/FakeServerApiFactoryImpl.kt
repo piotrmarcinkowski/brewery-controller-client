@@ -29,7 +29,12 @@ class FakeServerApiFactoryImpl : ServerApiFactory {
 
         return object: ServerApi {
             override fun getSensors(): Observable<List<ThermSensor>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                return Observable.just(listOf(
+                    ThermSensor("sensor_1", ""),
+                    ThermSensor("sensor_2", ""),
+                    ThermSensor("sensor_3", ""),
+                    ThermSensor("sensor_4", ""))
+                )
             }
 
             override fun getPrograms(): Observable<List<Program>> {
