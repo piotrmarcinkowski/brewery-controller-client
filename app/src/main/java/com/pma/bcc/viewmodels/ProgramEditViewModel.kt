@@ -3,32 +3,46 @@ package com.pma.bcc.viewmodels
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.pma.bcc.R
 import com.pma.bcc.model.*
 import com.pma.bcc.utils.TemperatureFormatter
 import io.reactivex.BackpressureStrategy
+import io.reactivex.schedulers.Schedulers
 import mu.KLogging
 import javax.inject.Inject
 
 class ProgramEditViewModel : BaseViewModel {
-    companion object : KLogging()
+    companion object : KLogging() {
+        class Relay(private val relayIndex : Int, private val resourceProvider: ResourceProvider) {
+            override fun toString(): String {
+                return when (relayIndex) {
+                    Program.NO_RELAY -> resourceProvider.getString(R.string.program_edit_no_relay_used)
+                    else -> resourceProvider.getString(R.string.program_edit_relay_display_string, relayIndex)
+                }
+            }
+        }
+    }
 
     private val programRepository: ProgramsRepository
     private val resourceProvider: ResourceProvider
     private val appProperties: AppProperties
+    private lateinit var program : Program
     val programName = MutableLiveData<String>()
     val maxTemp = MutableLiveData<String>()
     val minTemp = MutableLiveData<String>()
-    private var programIsActive = MutableLiveData<Boolean>()
-    val selectedSensorPosition = MutableLiveData<Int>()
-    val selectedCoolingRelayPosition = MutableLiveData<Int>()
-    val selectedHeatingRelayPosition = MutableLiveData<Int>()
-    var sensors: LiveData<List<ThermSensor>>? = null
-    val relays = MutableLiveData<List<String>>()
-    private var programHeatingRelay = MutableLiveData<String>()
-    private var programCoolingRelay = MutableLiveData<String>()
-    private var programSaveInProgress = MutableLiveData<Boolean>()
+    val programIsActive = MutableLiveData<Boolean>(true)
+    val selectedSensorPosition = MutableLiveData<Int>(0)
+    val selectedCoolingRelayPosition = MutableLiveData<Int>(0)
+    val selectedHeatingRelayPosition = MutableLiveData<Int>(0)
+    val sensorsLoaded = MutableLiveData<Boolean>()
+    val sensors = MediatorLiveData<List<ThermSensor>>()
+    val relays = MutableLiveData<List<Relay>>()
+    val programHeatingRelay = MutableLiveData<String>()
+    val programCoolingRelay = MutableLiveData<String>()
+    private val programSaveInProgress = MutableLiveData<Boolean>()
     private val programUpdateError = MutableLiveData<String>()
 
     @Inject constructor(programRepository: ProgramsRepository, resourceProvider: ResourceProvider, appProperties: AppProperties) : super()  {
@@ -41,48 +55,63 @@ class ProgramEditViewModel : BaseViewModel {
     }
 
     private fun initAvailableSensors() {
-        sensors = LiveDataReactiveStreams.fromPublisher(
+        logger.debug("Loading sensors")
+        val source = LiveDataReactiveStreams.fromPublisher(
             programRepository.getThermSensors().toFlowable(BackpressureStrategy.BUFFER)
+                .subscribeOn(Schedulers.io())
         )
+        sensors.addSource(source) { sensorList ->
+            run {
+                logger.debug("Sensors loaded $sensorList")
+                sensors.value = sensorList
+                sensors.removeSource(sensors)
+                updateSelectedSensor()
+            }
+        }
     }
 
     private fun initAvailableRelays() {
-        val relays = mutableListOf<String>()
+        val relays = mutableListOf<Relay>()
+        relays.add(Relay(Program.NO_RELAY, resourceProvider))
         for (i in 0..appProperties.numberOfRelays) {
-            relays.add(resourceProvider.getString(R.string.relay_display_string, i))
+            relays.add(Relay(i, resourceProvider))
         }
         this.relays.value = relays
     }
 
+    private fun updateSelectedSensor() {
+        logger.info("updateSelectedSensor program:$program sensors:${sensors.value}")
+        if (program != null) {
+            if (sensors.value != null) {
+                for ((index, sensor) in sensors.value!!.iterator().withIndex()) {
+                    if (sensor.id == program.sensorId) {
+                        selectedSensorPosition.value = index
+                        return
+                    }
+                }
+                logger.warn("updateSelectedSensor Sensor used in program not found on sensors list")
+            }
+            else {
+                logger.debug("updateSelectedSensor Sensors not yet loaded")
+            }
+        }
+        selectedSensorPosition.value = 0
+    }
+
     fun setProgram(program: Program) {
+        this.program = program
         programName.value = program.name
         maxTemp.value = TemperatureFormatter.format(program.maxTemp)
         minTemp.value = TemperatureFormatter.format(program.minTemp)
 
-        selectedSensorPosition.value = 1
-        selectedCoolingRelayPosition.value = 1
-        selectedHeatingRelayPosition.value = 1
+        updateSelectedSensor()
+        selectedCoolingRelayPosition.value = 0
+        selectedHeatingRelayPosition.value = 0
         //TODO: Initialize others
-    }
-
-    fun getProgramIsActive(): LiveData<Boolean> {
-        return programIsActive
-    }
-
-    fun getHeatingRelay(): LiveData<String> {
-        return programHeatingRelay
-    }
-
-    fun getCoolingRelay(): LiveData<String> {
-        return programCoolingRelay
     }
 
     fun getProgramSaveInProgress(): LiveData<Boolean> {
         return programSaveInProgress
-    }
-
-    fun toggleProgramActive() {
-
     }
 
     fun onClickBack(view: View){
@@ -90,10 +119,23 @@ class ProgramEditViewModel : BaseViewModel {
     }
 
     fun onClickSave(view: View){
-        logger.info("Save program: '${programName.value}' temp=[${minTemp.value}, ${maxTemp.value}]")
+        val program = Program.Builder(program)
+            .name(programName.value!!)
+            .sensorId(getSelectedSensor())
+            .build()
+
+        logger.info("Save program $program")
     }
 
-    override fun onCleared() {
+    private fun getSelectedSensor(): String {
+        if (sensors.value != null) {
+            return sensors.value!![selectedSensorPosition.value!!].id
+        }
+        return Program.DEFAULT_SENSOR_ID
+    }
+
+    override fun onCleared()
+    {
         super.onCleared()
     }
 }

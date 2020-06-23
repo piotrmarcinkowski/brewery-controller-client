@@ -97,7 +97,7 @@
                 android:layout_marginTop="20dp"
                 android:checked="@{viewModel.programIsActive}"
                 android:enabled="@{!viewModel.programSaveInProgress}"
-                android:onCheckedChanged="@{() -> viewModel.toggleProgramActive()}"
+                android:onCheckedChanged="@{() -> viewModel.programIsActive}"
                 app:layout_constraintTop_toBottomOf="@id/select_cooling_relay"
                 app:layout_constraintLeft_toLeftOf="@id/edit_program_name"
                 tools:checked="true" />
