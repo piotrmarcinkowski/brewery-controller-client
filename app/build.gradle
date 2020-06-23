@@ -73,7 +73,7 @@ dependencies {
 
     // Logger
     implementation "io.github.microutils:kotlin-logging:$kotlin_logging"
-    implementation "org.slf4j:slf4j-android:1.7.21"
+    implementation 'sk.baka.slf4j:slf4j-handroid:1.7.31'
 
     // Tests
     testImplementation 'junit:junit:4.12'
