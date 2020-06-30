@@ -29,19 +29,17 @@ class ProgramEditViewModel : BaseViewModel {
     private val programRepository: ProgramsRepository
     private val resourceProvider: ResourceProvider
     private val appProperties: AppProperties
-    private lateinit var program : Program
-    val programName = MutableLiveData<String>()
-    val maxTemp = MutableLiveData<String>()
-    val minTemp = MutableLiveData<String>()
-    val programIsActive = MutableLiveData<Boolean>(true)
+    private var program : Program? = null
+    val programName = MutableLiveData<String>(Program.DEFAULT_NAME)
+    val maxTemp = MutableLiveData<String>(TemperatureFormatter.format(Program.DEFAULT_TEMP))
+    val minTemp = MutableLiveData<String>(TemperatureFormatter.format(Program.DEFAULT_TEMP))
+    val programIsActive = MutableLiveData<Boolean>(Program.DEFAULT_ACTIVE)
     val selectedSensorPosition = MutableLiveData<Int>(0)
     val selectedCoolingRelayPosition = MutableLiveData<Int>(0)
     val selectedHeatingRelayPosition = MutableLiveData<Int>(0)
-    val sensorsLoaded = MutableLiveData<Boolean>()
+    val sensorsLoaded = MutableLiveData<Boolean>(false)
     val sensors = MediatorLiveData<List<ThermSensor>>()
     val relays = MutableLiveData<List<Relay>>()
-    val programHeatingRelay = MutableLiveData<String>()
-    val programCoolingRelay = MutableLiveData<String>()
     private val programSaveInProgress = MutableLiveData<Boolean>()
     private val programUpdateError = MutableLiveData<String>()
 
@@ -63,9 +61,10 @@ class ProgramEditViewModel : BaseViewModel {
         sensors.addSource(source) { sensorList ->
             run {
                 logger.debug("Sensors loaded $sensorList")
+                sensorsLoaded.value = true
                 sensors.value = sensorList
                 sensors.removeSource(sensors)
-                updateSelectedSensor()
+                updateSelectedSensor(program)
             }
         }
     }
@@ -79,7 +78,7 @@ class ProgramEditViewModel : BaseViewModel {
         this.relays.value = relays
     }
 
-    private fun updateSelectedSensor() {
+    private fun updateSelectedSensor(program: Program?) {
         logger.info("updateSelectedSensor program:$program sensors:${sensors.value}")
         if (program != null) {
             if (sensors.value != null) {
@@ -98,16 +97,29 @@ class ProgramEditViewModel : BaseViewModel {
         selectedSensorPosition.value = 0
     }
 
+    private fun updateSelectedRelays(program: Program?) {
+        logger.info("updateSelectedRelays program:$program")
+        if (program != null) {
+            selectedCoolingRelayPosition.value =
+                if (program.coolingRelayIndex == Program.NO_RELAY) 0 else program.coolingRelayIndex
+            selectedHeatingRelayPosition.value =
+                if (program.heatingRelayIndex == Program.NO_RELAY) 0 else program.heatingRelayIndex
+        }
+        else {
+            selectedCoolingRelayPosition.value = 0
+            selectedHeatingRelayPosition.value = 0
+        }
+    }
+
     fun setProgram(program: Program) {
         this.program = program
         programName.value = program.name
         maxTemp.value = TemperatureFormatter.format(program.maxTemp)
         minTemp.value = TemperatureFormatter.format(program.minTemp)
+        programIsActive.value = program.active
 
-        updateSelectedSensor()
-        selectedCoolingRelayPosition.value = 0
-        selectedHeatingRelayPosition.value = 0
-        //TODO: Initialize others
+        updateSelectedSensor(program)
+        updateSelectedRelays(program)
     }
 
     fun getProgramSaveInProgress(): LiveData<Boolean> {
@@ -121,7 +133,12 @@ class ProgramEditViewModel : BaseViewModel {
     fun onClickSave(view: View){
         val program = Program.Builder(program)
             .name(programName.value!!)
+            .minTemp(minTemp.value!!.toDouble())
+            .maxTemp(maxTemp.value!!.toDouble())
+            .coolingRelayIndex(if (selectedCoolingRelayPosition.value!! > 0) selectedCoolingRelayPosition.value!! else Program.NO_RELAY)
+            .heatingRelayIndex(if (selectedHeatingRelayPosition.value!! > 0) selectedHeatingRelayPosition.value!! else Program.NO_RELAY)
             .sensorId(getSelectedSensor())
+            .active(programIsActive.value!!)
             .build()
 
         logger.info("Save program $program")

@@ -29,7 +29,7 @@ data class Program (
         const val DEFAULT_NAME = ""
         const val DEFAULT_SENSOR_ID = ""
         const val DEFAULT_TEMP = 0.0
-        const val DEFAULT_ACTIVE = false
+        const val DEFAULT_ACTIVE = true
         const val CRC_UNKNOWN = ""
     }
 
