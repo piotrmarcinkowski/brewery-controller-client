@@ -44,4 +44,6 @@
     <string name="program_edit_title">Program Edit</string>
     <string name="program_edit_relay_display_string" formatted="false">Relay %1$d</string>
     <string name="program_edit_no_relay_used">Not used</string>
+    <string name="program_details_program_updated_successfully">Program updated</string>
+    <string name="program_details_program_update_error">Error!</string>
 </resources>

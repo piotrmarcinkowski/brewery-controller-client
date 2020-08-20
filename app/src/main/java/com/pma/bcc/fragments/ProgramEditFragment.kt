@@ -18,11 +18,10 @@ import com.pma.bcc.viewmodels.ViewModelFactory
 import javax.inject.Inject
 import dagger.android.support.DaggerFragment
 
-class ProgramEditFragment : DaggerFragment() {
+class ProgramEditFragment : BaseFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: ProgramEditViewModel
-    private lateinit var program: Program
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -42,14 +41,8 @@ class ProgramEditFragment : DaggerFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        initNavigationEventsObserver()
+        onViewModelReady(viewModel)
 
         return binding.root
-    }
-
-    private fun initNavigationEventsObserver() {
-        viewModel.navigationEvents().observe(viewLifecycleOwner, Observer {
-            Navigation.navigateTo(findNavController(), it)
-        })
     }
 }

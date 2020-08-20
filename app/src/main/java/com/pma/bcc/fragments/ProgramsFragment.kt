@@ -22,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_programs.view.*
 import javax.inject.Inject
 
 
-class ProgramsFragment : DaggerFragment() {
+class ProgramsFragment : BaseFragment() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModel: ProgramsViewModel
@@ -35,10 +35,10 @@ class ProgramsFragment : DaggerFragment() {
         var view = inflater.inflate(R.layout.fragment_programs, container, false)
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ProgramsViewModel::class.java)
+        onViewModelReady(viewModel)
 
         initProgramsRecyclerView(view)
         initProgramsLoadObservers(view)
-        initNavigationEventsObserver()
         observePrograms()
         observeProgramsStates()
         return view
@@ -88,12 +88,6 @@ class ProgramsFragment : DaggerFragment() {
     private fun observePrograms() {
         viewModel.getPrograms()
             .observe(viewLifecycleOwner, Observer { programsRecyclerViewAdapter.setPrograms(it) })
-    }
-
-    private fun initNavigationEventsObserver() {
-        viewModel.navigationEvents().observe(viewLifecycleOwner, Observer {
-            Navigation.navigateTo(findNavController(), it)
-        })
     }
 
     private fun observeProgramsStates() {

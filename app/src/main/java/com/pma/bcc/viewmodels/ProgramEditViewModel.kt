@@ -10,21 +10,22 @@ import com.pma.bcc.R
 import com.pma.bcc.model.*
 import com.pma.bcc.utils.TemperatureFormatter
 import io.reactivex.BackpressureStrategy
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import mu.KLogging
 import javax.inject.Inject
 
-class ProgramEditViewModel : BaseViewModel {
-    companion object : KLogging() {
-        class Relay(private val relayIndex : Int, private val resourceProvider: ResourceProvider) {
-            override fun toString(): String {
-                return when (relayIndex) {
-                    Program.NO_RELAY -> resourceProvider.getString(R.string.program_edit_no_relay_used)
-                    else -> resourceProvider.getString(R.string.program_edit_relay_display_string, relayIndex)
-                }
-            }
+class Relay(private val relayIndex : Int, private val resourceProvider: ResourceProvider) {
+    override fun toString(): String {
+        return when (relayIndex) {
+            Program.NO_RELAY -> resourceProvider.getString(R.string.program_edit_no_relay_used)
+            else -> resourceProvider.getString(R.string.program_edit_relay_display_string, relayIndex)
         }
     }
+}
+
+class ProgramEditViewModel : BaseViewModel {
+    companion object : KLogging()
 
     private val programRepository: ProgramsRepository
     private val resourceProvider: ResourceProvider
@@ -41,6 +42,7 @@ class ProgramEditViewModel : BaseViewModel {
     val sensors = MediatorLiveData<List<ThermSensor>>()
     val relays = MutableLiveData<List<Relay>>()
     private val programSaveInProgress = MutableLiveData<Boolean>()
+    private val programUpdate = MutableLiveData<String>()
     private val programUpdateError = MutableLiveData<String>()
 
     @Inject constructor(programRepository: ProgramsRepository, resourceProvider: ResourceProvider, appProperties: AppProperties) : super()  {
@@ -142,6 +144,21 @@ class ProgramEditViewModel : BaseViewModel {
             .build()
 
         logger.info("Save program $program")
+        programSaveInProgress.value = true
+        programRepository.updateProgram(program)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    programSaveInProgress.value = false
+                    showNotification(Notification(resourceProvider.getString(R.string.program_details_program_updated_successfully)))
+                    navigateBack()
+                },
+                { error ->
+                    programSaveInProgress.value = false
+                    showNotification(Notification(resourceProvider.getString(R.string.program_details_program_update_error) + "\n" + error.message))
+                }
+            )
     }
 
     private fun getSelectedSensor(): String {
