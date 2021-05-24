@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="programs_grid_columns_number">2</integer>
+    <integer name="programs_grid_columns_number">1</integer>
 </resources>
