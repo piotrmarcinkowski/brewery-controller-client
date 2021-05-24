@@ -46,4 +46,5 @@
     <string name="program_edit_no_relay_used">Not used</string>
     <string name="program_details_program_updated_successfully">Program updated</string>
     <string name="program_details_program_update_error">Error!</string>
+    <string name="menu_settings">Settings</string>
 </resources>

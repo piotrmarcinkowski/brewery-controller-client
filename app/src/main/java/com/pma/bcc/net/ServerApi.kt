@@ -19,9 +19,9 @@ interface ServerApi {
     @PUT("programs/{id}")
     fun updateProgram(@Path(value="id") programId: String, program: Program) : Observable<Program>
 
-    @GET("programs/states")
+    @GET("states")
     fun getProgramStates() : Observable<List<ProgramState>>
 
-    @GET("programs/states/{id}")
+    @GET("states/{id}")
     fun getProgramState(@Path(value="id") programId: String) : Observable<ProgramState?>
 }

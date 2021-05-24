@@ -8,7 +8,7 @@ enum class TargetId {
     Programs,
     ProgramDetails,
     ProgramEdit,
-    ConnectionSettings
+    Settings
 }
 
 enum class TargetArgumentKey {

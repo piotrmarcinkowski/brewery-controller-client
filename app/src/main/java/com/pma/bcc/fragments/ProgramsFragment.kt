@@ -2,22 +2,17 @@ package com.pma.bcc.fragments
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.pma.bcc.R
 import com.pma.bcc.adapters.ProgramsRecyclerViewAdapter
 import com.pma.bcc.adapters.ProgramsRecyclerViewAdapter.ItemClickListener
 import com.pma.bcc.model.Program
 import com.pma.bcc.view.ConnectionErrorView
-import com.pma.bcc.view.Navigation
 import com.pma.bcc.viewmodels.ProgramsViewModel
 import com.pma.bcc.viewmodels.ViewModelFactory
-import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_programs.view.*
 import javax.inject.Inject
 
@@ -52,6 +47,20 @@ class ProgramsFragment : BaseFragment() {
     override fun onPause() {
         viewModel.pause()
         super.onPause()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_programs, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                viewModel.goToSettings()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private fun initProgramsRecyclerView(view: View) {

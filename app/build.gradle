@@ -22,6 +22,9 @@ android {
     dataBinding {
         enabled = true
     }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -31,6 +34,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:support-v4:$support_version"
     implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "androidx.appcompat:appcompat:1.2.0"
     kapt "com.android.databinding:compiler:$android_plugin_version"
 
     // Lifecycle
@@ -39,12 +43,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version"
 
     // RecyclerView
-    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation "androidx.recyclerview:recyclerview:1.2.0"
     // For control over item selection of both touch and mouse driven selection
-    implementation "androidx.recyclerview:recyclerview-selection:1.1.0-beta01"
+    implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
 
     // ConstraintLayout
-    implementation "androidx.constraintlayout:constraintlayout:2.0.0-beta4"
+    implementation "androidx.constraintlayout:constraintlayout:2.0.4"
 
     // CardView
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -54,7 +58,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     // Preferences
-    implementation "androidx.preference:preference:$prefs_version"
+    implementation "androidx.preference:preference:1.1.1"
 
     // Rx
     implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"

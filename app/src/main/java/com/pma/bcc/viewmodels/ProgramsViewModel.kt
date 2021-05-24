@@ -133,6 +133,10 @@ class ProgramsViewModel : BaseViewModel {
             .addArg(TargetArgumentKey.ProgramDetailsProgram, program))
     }
 
+    fun goToSettings() {
+        navigateTo(NavigationTarget(TargetId.Settings))
+    }
+
     fun retry() {
         val error = programsLoadError.value
 
@@ -165,8 +169,8 @@ class ProgramsViewModel : BaseViewModel {
             return
         }
         when(error.errorId) {
-            ERROR_ID_CONNECTION_SETTINGS -> navigateTo(NavigationTarget(TargetId.ConnectionSettings))
-            ERROR_ID_CONNECTION_TIMEOUT -> navigateTo(NavigationTarget(TargetId.ConnectionSettings))
+            ERROR_ID_CONNECTION_SETTINGS -> navigateTo(NavigationTarget(TargetId.Settings))
+            ERROR_ID_CONNECTION_TIMEOUT -> navigateTo(NavigationTarget(TargetId.Settings))
             else -> logger.warn("extraAction() no action for error: ${error.errorId}")
         }
     }

@@ -220,6 +220,6 @@ class ProgramsViewModelTest {
         viewModel.extraAction()
 
         verify(navigationEventsObserver).onChanged(navigationArgumentCaptor.capture())
-        assertEquals(TargetId.ConnectionSettings, navigationArgumentCaptor.value.targetId)
+        assertEquals(TargetId.Settings, navigationArgumentCaptor.value.targetId)
     }
 }

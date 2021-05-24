@@ -11,6 +11,7 @@ import com.pma.bcc.model.ProgramsRepository
 import com.pma.bcc.model.ProgramsRepositoryImpl
 import com.pma.bcc.net.FakeServerApiFactoryImpl
 import com.pma.bcc.net.ServerApiFactory
+import com.pma.bcc.net.ServerApiFactoryImpl
 import com.pma.bcc.viewmodels.ResourceProvider
 import dagger.Module
 import dagger.Provides
@@ -49,8 +50,8 @@ class ApplicationModule {
     @Provides
     @Singleton
     fun provideRetrofitFactory(appProperties: AppProperties): ServerApiFactory {
-        //return ServerApiFactoryImpl(appProperties)
-        return FakeServerApiFactoryImpl(appProperties)
+        return ServerApiFactoryImpl(appProperties)
+        //return FakeServerApiFactoryImpl(appProperties)
     }
 
     @Provides
