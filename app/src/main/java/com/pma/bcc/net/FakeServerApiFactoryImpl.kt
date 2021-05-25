@@ -57,6 +57,14 @@ class FakeServerApiFactoryImpl : ServerApiFactory {
                 }
             }
 
+            override fun createProgram(program: Program): Observable<Program> {
+                return Observable.create<Program> { emitter ->
+                    Thread.sleep(5000)
+                    emitter.onNext(program)
+                    emitter.onComplete()
+                }
+            }
+
             override fun getProgramStates(): Observable<List<ProgramState>> {
                 return Observable.just(fakeProgramStates())
             }

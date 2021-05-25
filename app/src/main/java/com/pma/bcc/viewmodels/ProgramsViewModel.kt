@@ -25,11 +25,13 @@ class ProgramsViewModel : BaseViewModel {
     private val programStates = MutableLiveData<Map<String, ProgramState>>()
     private val programsLoadInProgress = MutableLiveData<Boolean>()
     private val programsLoadError = MutableLiveData<ConnectionError>()
+    private val addProgramAvailable = MutableLiveData<Boolean>()
     private var periodicSubscribeDisposable: Disposable? = null
 
     @Inject constructor(programsRepository: ProgramsRepository) : super()  {
         this.programsRepository = programsRepository
         programsLoadInProgress.value = false
+        addProgramAvailable.value = false
     }
 
     fun getPrograms(): LiveData<List<Program>> {
@@ -39,6 +41,7 @@ class ProgramsViewModel : BaseViewModel {
             programsLoadError.value = null
         }
         programsLoadInProgress.value = true
+        addProgramAvailable.value = false
 
         try {
             loadPrograms()
@@ -59,6 +62,7 @@ class ProgramsViewModel : BaseViewModel {
                 { list ->
                     logger.warn("loadPrograms(): $list")
                     programsLoadInProgress.value = false
+                    addProgramAvailable.value = true
                     programs.value = list
                 },
                 { error ->
@@ -128,9 +132,17 @@ class ProgramsViewModel : BaseViewModel {
         return programsLoadError
     }
 
+    fun addProgramAvailable(): LiveData<Boolean> {
+        return addProgramAvailable
+    }
+
     fun showProgramDetails(program: Program) {
         navigateTo(NavigationTarget(TargetId.ProgramDetails)
             .addArg(TargetArgumentKey.ProgramDetailsProgram, program))
+    }
+
+    fun goToAddProgram() {
+        navigateTo(NavigationTarget(TargetId.ProgramAdd))
     }
 
     fun goToSettings() {

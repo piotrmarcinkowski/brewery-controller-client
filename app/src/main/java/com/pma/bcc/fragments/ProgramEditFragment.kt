@@ -36,7 +36,9 @@ class ProgramEditFragment : BaseFragment() {
 
         viewModel =
             ViewModelProviders.of(this, viewModelFactory).get(ProgramEditViewModel::class.java)
-        viewModel.setProgram(arguments?.getSerializable(TargetArgumentKey.ProgramEditProgram.name) as Program)
+        if (arguments?.getSerializable(TargetArgumentKey.ProgramEditProgram.name) != null) {
+            viewModel.setProgram(arguments?.getSerializable(TargetArgumentKey.ProgramEditProgram.name) as Program)
+        }
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel

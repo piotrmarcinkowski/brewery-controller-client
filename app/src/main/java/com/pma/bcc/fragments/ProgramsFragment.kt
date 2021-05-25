@@ -34,6 +34,7 @@ class ProgramsFragment : BaseFragment() {
 
         initProgramsRecyclerView(view)
         initProgramsLoadObservers(view)
+        initAddProgramFloatingButton(view)
         observePrograms()
         observeProgramsStates()
         return view
@@ -91,6 +92,14 @@ class ProgramsFragment : BaseFragment() {
                     viewModel.extraAction()
                 }
             }
+        })
+    }
+
+    private fun initAddProgramFloatingButton(view: View) {
+        view.fab.setOnClickListener { viewModel.goToAddProgram() }
+        viewModel.addProgramAvailable().observe(viewLifecycleOwner, Observer {
+            if (it) view.fab.show()
+            else view.fab.hide()
         })
     }
 

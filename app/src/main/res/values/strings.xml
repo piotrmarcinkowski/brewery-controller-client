@@ -36,6 +36,7 @@
     <string name="program_edit_name_hint">eg. American Pale Ale</string>
     <string name="program_edit_max_temp_hint">eg. 18.5</string>
     <string name="program_edit_min_temp_hint">eg. 17.5</string>
+    <string name="programs_button_add_program">Add Program</string>
     <string name="programs_error_title_cant_connect_server">Failed to connect to server</string>
     <string name="programs_error_message_connection_setup_missing">Server connection is not configured. Go to settings and provide the server data.</string>
     <string name="programs_error_message_connection_timeout">Check the server configuration and make sure you have access to it in this network. The server you configured may also be turned off.</string>

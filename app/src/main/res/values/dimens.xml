@@ -8,5 +8,6 @@
     <dimen name="program_grid_item_unit_text_size">10dp</dimen>
     <dimen name="program_grid_item_temp_text_size">36sp</dimen>
     <dimen name="program_grid_item_temp_placeholder_height">40dp</dimen>
+    <dimen name="program_grid_item_add_program_height">40dp</dimen>
     <dimen name="program_grid_temp_icon_right_margin">8dp</dimen>
 </resources>

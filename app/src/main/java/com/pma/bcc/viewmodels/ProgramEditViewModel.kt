@@ -10,6 +10,7 @@ import com.pma.bcc.R
 import com.pma.bcc.model.*
 import com.pma.bcc.utils.TemperatureFormatter
 import io.reactivex.BackpressureStrategy
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import mu.KLogging
@@ -145,7 +146,14 @@ class ProgramEditViewModel : BaseViewModel {
 
         logger.info("Save program $program")
         programSaveInProgress.value = true
-        programRepository.updateProgram(program)
+        var programSaveObservable: Observable<Program>? = null
+        if (program.id == Program.ID_UNKNOWN) {
+            programSaveObservable = programRepository.createProgram(program)
+        }
+        else {
+            programSaveObservable = programRepository.updateProgram(program)
+        }
+        programSaveObservable
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(

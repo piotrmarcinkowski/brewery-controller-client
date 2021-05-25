@@ -8,6 +8,7 @@ enum class TargetId {
     Programs,
     ProgramDetails,
     ProgramEdit,
+    ProgramAdd,
     Settings
 }
 

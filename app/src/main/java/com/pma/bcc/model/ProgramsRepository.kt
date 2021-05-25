@@ -14,4 +14,6 @@ interface ProgramsRepository {
     fun getThermSensors() : Observable<List<ThermSensor>>
     @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
     fun updateProgram(program: Program) : Observable<Program>
+    @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
+    fun createProgram(program: Program) : Observable<Program>
 }

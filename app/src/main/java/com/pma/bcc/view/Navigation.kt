@@ -19,6 +19,7 @@ class Navigation {
                 TargetId.Back -> navController.popBackStack()
                 TargetId.ProgramDetails -> navController.navigate(R.id.action_programsFragment_to_programDetailsFragment, createProgramDetailsArgsBundle(target.getArgs()))
                 TargetId.ProgramEdit -> navController.navigate(R.id.action_programDetailsFragment_to_programEditFragment, createProgramEditArgsBundle(target.getArgs()))
+                TargetId.ProgramAdd -> navController.navigate(R.id.action_programsFragment_to_programEditFragment)
                 TargetId.Settings -> navController.navigate(R.id.action_programsFragment_to_settingsFragment)
                 else -> logger.warn("navigateTo() unknown target: $target")
             }
@@ -32,7 +33,9 @@ class Navigation {
 
         private fun createProgramEditArgsBundle(args: Map<TargetArgumentKey, Any>) : Bundle {
             var bundle = Bundle(args.size)
-            bundle.putSerializable(TargetArgumentKey.ProgramEditProgram.name, args[TargetArgumentKey.ProgramEditProgram] as Serializable)
+            bundle.putSerializable(
+                    TargetArgumentKey.ProgramEditProgram.name,
+                    args[TargetArgumentKey.ProgramEditProgram] as Serializable)
             return bundle
         }
     }

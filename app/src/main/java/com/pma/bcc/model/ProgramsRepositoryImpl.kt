@@ -43,6 +43,14 @@ open class ProgramsRepositoryImpl(private val serverApiFactory : ServerApiFactor
             }
     }
 
+    override fun createProgram(program: Program): Observable<Program> {
+        return serverApiFactory.create()
+            .createProgram(program)
+            .doOnNext {
+                cachedPrograms = cachedPrograms.plus(it)
+            }
+    }
+
     override fun getProgramStates(): Observable<Map<String, ProgramState>> {
         if (cachedProgramStates == null) {
             return fetchProgramStates()

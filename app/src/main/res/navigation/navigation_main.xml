@@ -16,6 +16,9 @@
         <action
                 android:id="@+id/action_programsFragment_to_programDetailsFragment"
                 app:destination="@id/programDetailsFragment" />
+        <action
+                android:id="@+id/action_programsFragment_to_programEditFragment"
+                app:destination="@id/programEditFragment" />
     </fragment>
     <fragment
             android:id="@+id/settingsFragment"
