@@ -193,4 +193,22 @@ class ProgramDetailsViewModel : BaseViewModel {
         navigateTo(NavigationTarget(TargetId.ProgramEdit)
             .addArg(TargetArgumentKey.ProgramEditProgram, program.value!!))
     }
+
+    fun onClickDeleteProgram() {
+        val currentProgram = program.value
+        if (currentProgram != null) {
+            programRepository
+                .deleteProgram(currentProgram)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        logger.info("Program deleted: $currentProgram")
+                    },
+                    { error ->
+                        logger.warn("Error while deleting program: ${error.message}")
+                    }
+                )
+        }
+    }
 }

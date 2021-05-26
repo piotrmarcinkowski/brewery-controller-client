@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.pma.bcc.R
 import com.pma.bcc.model.*
 import com.pma.bcc.utils.TemperatureFormatter
@@ -58,8 +57,14 @@ class ProgramEditViewModel : BaseViewModel {
     private fun initAvailableSensors() {
         logger.debug("Loading sensors")
         val source = LiveDataReactiveStreams.fromPublisher(
-            programRepository.getThermSensors().toFlowable(BackpressureStrategy.BUFFER)
+            programRepository.getThermSensors()
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .onErrorReturn {
+                    showNotification(Notification(resourceProvider.getString(R.string.program_details_sensors_fetch_error)  + "\n" + it.message))
+                    emptyList<ThermSensor>()
+                }
+                .toFlowable(BackpressureStrategy.BUFFER)
         )
         sensors.addSource(source) { sensorList ->
             run {
@@ -75,7 +80,8 @@ class ProgramEditViewModel : BaseViewModel {
     private fun initAvailableRelays() {
         val relays = mutableListOf<Relay>()
         relays.add(Relay(Program.NO_RELAY, resourceProvider))
-        for (i in 0..appProperties.numberOfRelays) {
+        val maxRelayIndex = appProperties.numberOfRelays - 1
+        for (i in 0..maxRelayIndex) {
             relays.add(Relay(i, resourceProvider))
         }
         this.relays.value = relays
@@ -104,9 +110,9 @@ class ProgramEditViewModel : BaseViewModel {
         logger.info("updateSelectedRelays program:$program")
         if (program != null) {
             selectedCoolingRelayPosition.value =
-                if (program.coolingRelayIndex == Program.NO_RELAY) 0 else program.coolingRelayIndex
+                if (program.coolingRelayIndex == Program.NO_RELAY) 0 else program.coolingRelayIndex + 1
             selectedHeatingRelayPosition.value =
-                if (program.heatingRelayIndex == Program.NO_RELAY) 0 else program.heatingRelayIndex
+                if (program.heatingRelayIndex == Program.NO_RELAY) 0 else program.heatingRelayIndex + 1
         }
         else {
             selectedCoolingRelayPosition.value = 0
@@ -138,8 +144,8 @@ class ProgramEditViewModel : BaseViewModel {
             .name(programName.value!!)
             .minTemp(minTemp.value!!.toDouble())
             .maxTemp(maxTemp.value!!.toDouble())
-            .coolingRelayIndex(if (selectedCoolingRelayPosition.value!! > 0) selectedCoolingRelayPosition.value!! else Program.NO_RELAY)
-            .heatingRelayIndex(if (selectedHeatingRelayPosition.value!! > 0) selectedHeatingRelayPosition.value!! else Program.NO_RELAY)
+            .coolingRelayIndex(if (selectedCoolingRelayPosition.value!! > 0) selectedCoolingRelayPosition.value!! - 1 else Program.NO_RELAY)
+            .heatingRelayIndex(if (selectedHeatingRelayPosition.value!! > 0) selectedHeatingRelayPosition.value!! - 1 else Program.NO_RELAY)
             .sensorId(getSelectedSensor())
             .active(programIsActive.value!!)
             .build()
@@ -170,7 +176,7 @@ class ProgramEditViewModel : BaseViewModel {
     }
 
     private fun getSelectedSensor(): String {
-        if (sensors.value != null) {
+        if (sensors.value != null && selectedSensorPosition.value!! < sensors.value!!.size) {
             return sensors.value!![selectedSensorPosition.value!!].id
         }
         return Program.DEFAULT_SENSOR_ID

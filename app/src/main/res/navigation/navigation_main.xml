@@ -8,7 +8,7 @@
     <fragment
             android:id="@+id/programsFragment"
             android:name="com.pma.bcc.fragments.ProgramsFragment"
-            android:label="fragment_programs"
+            android:label="@string/screen_title_programs"
             tools:layout="@layout/fragment_programs" >
         <action
                 android:id="@+id/action_programsFragment_to_settingsFragment"
@@ -23,11 +23,11 @@
     <fragment
             android:id="@+id/settingsFragment"
             android:name="com.pma.bcc.fragments.SettingsFragment"
-            android:label="SettingsFragment"/>
+            android:label="@string/screen_title_settings" />
     <fragment
             android:id="@+id/programDetailsFragment"
             android:name="com.pma.bcc.fragments.ProgramDetailsFragment"
-            android:label="ProgramStatusFragment"
+            android:label="@string/screen_title_program_details"
             tools:layout="@layout/fragment_program_details">
         <argument
                 android:name="program"
@@ -39,7 +39,7 @@
     <fragment
             android:id="@+id/programEditFragment"
             android:name="com.pma.bcc.fragments.ProgramEditFragment"
-            android:label="ProgramEditFragment"
+            android:label="@string/screen_title_program_edit"
             tools:layout="@layout/fragment_program_edit">
         <argument
                 android:name="program"

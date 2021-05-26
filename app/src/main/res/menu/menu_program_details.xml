@@ -2,9 +2,9 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-            android:id="@+id/action_settings"
-            android:icon="@drawable/ic_menu_settings"
-            android:title="@string/menu_settings"
+            android:id="@+id/action_delete_program"
+            android:icon="@drawable/ic_menu_delete_program"
+            android:title="@string/menu_delete_program"
             app:showAsAction="ifRoom">
     </item>
 </menu>

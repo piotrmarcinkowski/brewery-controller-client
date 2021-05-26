@@ -2,9 +2,8 @@ package com.pma.bcc.fragments
 
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -57,6 +56,36 @@ class ProgramDetailsFragment : BaseFragment() {
     override fun onPause() {
         viewModel.pause()
         super.onPause()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_program_details, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_delete_program -> {
+                showProgramDeleteConfirmation()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showProgramDeleteConfirmation() {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setPositiveButton(R.string.confirmation_delete_program_ok) {
+                        dialog, id -> viewModel.onClickDeleteProgram()
+                }
+                setNegativeButton(R.string.confirmation_delete_program_cancel, null)
+                setMessage(R.string.confirmation_delete_program_message)
+                setTitle(R.string.confirmation_delete_program_title)
+            }
+            builder.create()
+        }
+        alertDialog?.show()
     }
 
     private fun onProgramChanged(program: Program) {
