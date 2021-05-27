@@ -65,9 +65,10 @@ class FakeServerApiFactoryImpl : ServerApiFactory {
                 }
             }
 
-            override fun deleteProgram(programId: String): Observable<Void> {
-                return Observable.create<Void> { emitter ->
+            override fun deleteProgram(programId: String): Observable<Program> {
+                return Observable.create<Program> { emitter ->
                     Thread.sleep(5000)
+                    emitter.onNext(fakePrograms()[0])
                     emitter.onComplete()
                 }
             }

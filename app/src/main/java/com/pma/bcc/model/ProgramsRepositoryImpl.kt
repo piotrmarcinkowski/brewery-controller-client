@@ -51,7 +51,7 @@ open class ProgramsRepositoryImpl(private val serverApiFactory : ServerApiFactor
             }
     }
 
-    override fun deleteProgram(program: Program): Observable<Void> {
+    override fun deleteProgram(program: Program): Observable<Program> {
         return serverApiFactory.create()
             .deleteProgram(program.id)
             .doOnNext {

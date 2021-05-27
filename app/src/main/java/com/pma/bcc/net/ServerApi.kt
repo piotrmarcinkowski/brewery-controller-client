@@ -26,7 +26,7 @@ interface ServerApi {
     fun updateProgram(@Path(value="id") programId: String, @Body program: Program) : Observable<Program>
 
     @DELETE("programs/{id}")
-    fun deleteProgram(@Path(value="id") programId: String) : Observable<Void>
+    fun deleteProgram(@Path(value="id") programId: String) : Observable<Program>
 
     @GET("states")
     fun getProgramStates() : Observable<List<ProgramState>>

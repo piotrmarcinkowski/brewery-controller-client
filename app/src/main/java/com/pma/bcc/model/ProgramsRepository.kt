@@ -17,5 +17,5 @@ interface ProgramsRepository {
     @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
     fun createProgram(program: Program) : Observable<Program>
     @Throws(ServerApiFactory.InvalidConnectionSettingsException::class)
-    fun deleteProgram(program: Program) : Observable<Void>
+    fun deleteProgram(program: Program) : Observable<Program>
 }

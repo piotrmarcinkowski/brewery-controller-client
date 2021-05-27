@@ -204,9 +204,12 @@ class ProgramDetailsViewModel : BaseViewModel {
                 .subscribe(
                     {
                         logger.info("Program deleted: $currentProgram")
+                        showNotification(Notification(resourceProvider.getString(R.string.program_details_program_deleted_successfully)))
+                        navigateBack()
                     },
                     { error ->
                         logger.warn("Error while deleting program: ${error.message}")
+                        showNotification(Notification(resourceProvider.getString(R.string.program_details_program_update_error) + "\n" + error.message))
                     }
                 )
         }

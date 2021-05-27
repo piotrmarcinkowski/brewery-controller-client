@@ -45,9 +45,11 @@
     <string name="program_edit_title">Program Edit</string>
     <string name="program_edit_relay_display_string" formatted="false">Relay %1$d</string>
     <string name="program_edit_no_relay_used">Not used</string>
-    <string name="program_details_program_updated_successfully">Program updated</string>
+    <string name="program_details_program_saved_successfully">Program saved</string>
+    <string name="program_details_program_deleted_successfully">Program deleted</string>
     <string name="program_details_program_update_error">Error while saving program!</string>
     <string name="program_details_sensors_fetch_error">Error while fetching sensors!</string>
+    <string name="program_details_program_delete_error">Can\'t delete the program!</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_delete_program">Delete program</string>
     <string name="screen_title_programs">Programs</string>

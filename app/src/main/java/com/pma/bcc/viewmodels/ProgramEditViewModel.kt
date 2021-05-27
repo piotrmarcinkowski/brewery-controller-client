@@ -165,7 +165,7 @@ class ProgramEditViewModel : BaseViewModel {
             .subscribe(
                 {
                     programSaveInProgress.value = false
-                    showNotification(Notification(resourceProvider.getString(R.string.program_details_program_updated_successfully)))
+                    showNotification(Notification(resourceProvider.getString(R.string.program_details_program_saved_successfully)))
                     navigateBack()
                 },
                 { error ->

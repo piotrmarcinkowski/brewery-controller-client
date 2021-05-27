@@ -93,7 +93,7 @@ class ProgramDetailsFragment : BaseFragment() {
         updateProgramView()
     }
 
-    private fun onProgramStateChanged(programState: ProgramState) {
+    private fun onProgramStateChanged(programState: ProgramState?) {
         this.programState = programState
         updateProgramView()
     }
