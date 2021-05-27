@@ -209,7 +209,8 @@ class ProgramDetailsViewModel : BaseViewModel {
                     },
                     { error ->
                         logger.warn("Error while deleting program: ${error.message}")
-                        showNotification(Notification(resourceProvider.getString(R.string.program_details_program_update_error) + "\n" + error.message))
+                        var errorHandler = ErrorResponseHandler(resourceProvider)
+                        showNotification(errorHandler.createNotification(resourceProvider.getString(R.string.program_details_program_update_error), error))
                     }
                 )
         }

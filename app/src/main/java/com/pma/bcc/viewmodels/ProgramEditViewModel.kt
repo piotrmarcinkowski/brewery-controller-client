@@ -61,7 +61,8 @@ class ProgramEditViewModel : BaseViewModel {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .onErrorReturn {
-                    showNotification(Notification(resourceProvider.getString(R.string.program_details_sensors_fetch_error)  + "\n" + it.message))
+                    var errorHandler = ErrorResponseHandler(resourceProvider)
+                    showNotification(errorHandler.createNotification(resourceProvider.getString(R.string.program_details_sensors_fetch_error), it))
                     emptyList<ThermSensor>()
                 }
                 .toFlowable(BackpressureStrategy.BUFFER)
@@ -170,7 +171,8 @@ class ProgramEditViewModel : BaseViewModel {
                 },
                 { error ->
                     programSaveInProgress.value = false
-                    showNotification(Notification(resourceProvider.getString(R.string.program_details_program_update_error) + "\n" + error.message))
+                    var errorHandler = ErrorResponseHandler(resourceProvider)
+                    showNotification(errorHandler.createNotification(resourceProvider.getString(R.string.program_details_program_update_error), error))
                 }
             )
     }
