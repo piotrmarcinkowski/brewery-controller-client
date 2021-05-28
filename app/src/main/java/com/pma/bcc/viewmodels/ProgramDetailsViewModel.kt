@@ -141,8 +141,28 @@ class ProgramDetailsViewModel : BaseViewModel {
     }
 
     fun resume() {
+        refreshProgram()
         startUpdatingProgramState()
     }
+
+    private fun refreshProgram() {
+        programRepository.getPrograms()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                { programs ->
+                    run {
+                        val newProgram = programs.find { it.id == program.value!!.id }
+                        if (newProgram != null) {
+                            onProgramUpdated(newProgram)
+                        } else {
+                            showNotification(Notification(resourceProvider.getString(R.string.program_details_program_refresh_error)))
+                        }
+                    }
+                },
+                    { error -> showNotification(Notification(resourceProvider.getString(R.string.program_details_program_refresh_error))) }
+                    )
+                }
 
     fun pause() {
         stopUpdatingProgramState()
