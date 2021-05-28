@@ -25,8 +25,11 @@
     <string name="program_details_program_active">Program is running</string>
     <string name="program_details_program_inactive">Program is stopped</string>
     <string name="program_edit_label_program_name">Program name</string>
+    <string name="program_edit_label_temperature">Temperature</string>
     <string name="program_edit_label_max_temp">Max temperature</string>
+    <string name="program_edit_label_max_temp_short">Max</string>
     <string name="program_edit_label_min_temp">Min temperature</string>
+    <string name="program_edit_label_min_temp_short">Min</string>
     <string name="program_edit_label_therm_sensor">Temperature Sensor</string>
     <string name="program_edit_label_heating_relay_index">Heating relay</string>
     <string name="program_edit_label_cooling_relay_index">Cooling relay</string>
@@ -34,8 +37,8 @@
     <string name="program_edit_button_back">Back</string>
     <string name="program_edit_button_save">Save program</string>
     <string name="program_edit_name_hint">eg. American Pale Ale</string>
-    <string name="program_edit_max_temp_hint">eg. 18.5</string>
-    <string name="program_edit_min_temp_hint">eg. 17.5</string>
+    <string name="program_edit_max_temp_default" translatable="false">18.0</string>
+    <string name="program_edit_min_temp_default" translatable="false">17.0</string>
     <string name="programs_button_add_program">Add Program</string>
     <string name="programs_error_title_cant_connect_server">Failed to connect to server</string>
     <string name="programs_error_message_connection_setup_missing">Server connection is not configured. Go to settings and provide the server data.</string>

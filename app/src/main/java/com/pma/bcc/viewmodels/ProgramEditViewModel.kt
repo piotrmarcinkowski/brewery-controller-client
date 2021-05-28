@@ -52,6 +52,14 @@ class ProgramEditViewModel : BaseViewModel {
 
         initAvailableSensors()
         initAvailableRelays()
+        setInitialTemperatures()
+    }
+
+    private fun setInitialTemperatures() {
+        minTemp.value = TemperatureFormatter.format(
+            resourceProvider.getString(R.string.program_edit_min_temp_default).toDouble())
+        maxTemp.value = TemperatureFormatter.format(
+            resourceProvider.getString(R.string.program_edit_max_temp_default).toDouble())
     }
 
     private fun initAvailableSensors() {
@@ -187,5 +195,27 @@ class ProgramEditViewModel : BaseViewModel {
     override fun onCleared()
     {
         super.onCleared()
+    }
+
+    fun onMinTempIncrease(view: View) {
+        modifyTemp(minTemp, 0.5)
+    }
+
+    fun onMinTempDecrease(view: View) {
+        modifyTemp(minTemp, -0.5)
+    }
+
+    fun onMaxTempIncrease(view: View) {
+        modifyTemp(maxTemp, 0.5)
+    }
+
+    fun onMaxTempDecrease(view: View) {
+        modifyTemp(maxTemp, -0.5)
+    }
+
+    fun modifyTemp(liveData: MutableLiveData<String>, delta: Double) {
+        val oldValue = liveData.value!!.toDouble()
+        val newValue = oldValue + delta
+        liveData.value = TemperatureFormatter.format(newValue)
     }
 }
