@@ -27,6 +27,7 @@ class ProgramsViewModel : BaseViewModel {
     private val programsLoadError = MutableLiveData<ConnectionError>()
     private val addProgramAvailable = MutableLiveData<Boolean>()
     private var periodicSubscribeDisposable: Disposable? = null
+    private var initialProgramsLoadSuccessful = false
 
     @Inject constructor(programsRepository: ProgramsRepository) : super()  {
         this.programsRepository = programsRepository
@@ -64,11 +65,14 @@ class ProgramsViewModel : BaseViewModel {
                     programsLoadInProgress.value = false
                     addProgramAvailable.value = true
                     programs.value = list
+                    initialProgramsLoadSuccessful = true
                 },
                 { error ->
                     logger.warn("loadPrograms(): $error")
                     programsLoadInProgress.value = false
-                    setConnectionErrorTimeout()
+                    if (!initialProgramsLoadSuccessful) {
+                        setConnectionErrorTimeout()
+                    }
                 }
             )
     }
