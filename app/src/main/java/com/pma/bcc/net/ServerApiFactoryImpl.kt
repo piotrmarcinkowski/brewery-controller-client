@@ -1,6 +1,9 @@
 package com.pma.bcc.net
 
+import com.google.gson.GsonBuilder
 import com.pma.bcc.model.AppProperties
+import com.pma.bcc.model.Temperature
+import com.pma.bcc.model.TemperatureTypeAdapter
 import mu.KLogging
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -32,9 +35,12 @@ class ServerApiFactoryImpl : ServerApiFactory {
     private fun createRetrofitInstance(baseUrl: URL): ServerApi {
         logger.error("createRetrofitInstance url: $baseUrl")
         try {
+            val gson = GsonBuilder()
+                .registerTypeAdapter(Temperature::class.java, TemperatureTypeAdapter())
+                .create()
             return Retrofit.Builder()
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .baseUrl(baseUrl)
                 .build().create(ServerApi::class.java)
         } catch (e: Exception) {

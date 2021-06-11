@@ -59,9 +59,9 @@ class ProgramsViewModelTest {
 
     private fun fakeProgramStates() : Map<String, ProgramState> {
         val data = HashMap<String, ProgramState>()
-        data["1"] = ProgramState("1", "", 18.6, true, false)
-        data["2"] = ProgramState("2", "", 18.2, false, false)
-        data["3"] = ProgramState("3", "", 19.2, false, false)
+        data["1"] = ProgramState("1", "", Temperature(18.6), true, false)
+        data["2"] = ProgramState("2", "", Temperature(18.2), false, false)
+        data["3"] = ProgramState("3", "", Temperature(19.2), false, false)
         return data
     }
 

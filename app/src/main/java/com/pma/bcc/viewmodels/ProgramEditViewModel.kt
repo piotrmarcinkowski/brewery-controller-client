@@ -7,7 +7,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.pma.bcc.R
 import com.pma.bcc.model.*
-import com.pma.bcc.utils.TemperatureFormatter
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -32,8 +31,8 @@ class ProgramEditViewModel : BaseViewModel {
     private val appProperties: AppProperties
     private var program : Program? = null
     val programName = MutableLiveData<String>(Program.DEFAULT_NAME)
-    val maxTemp = MutableLiveData<String>(TemperatureFormatter.format(Program.DEFAULT_TEMP))
-    val minTemp = MutableLiveData<String>(TemperatureFormatter.format(Program.DEFAULT_TEMP))
+    val maxTemp = MutableLiveData<String>(Program.DEFAULT_TEMP.displayString())
+    val minTemp = MutableLiveData<String>(Program.DEFAULT_TEMP.displayString())
     val programIsActive = MutableLiveData<Boolean>(Program.DEFAULT_ACTIVE)
     val selectedSensorPosition = MutableLiveData<Int>(0)
     val selectedCoolingRelayPosition = MutableLiveData<Int>(0)
@@ -56,10 +55,8 @@ class ProgramEditViewModel : BaseViewModel {
     }
 
     private fun setInitialTemperatures() {
-        minTemp.value = TemperatureFormatter.format(
-            resourceProvider.getString(R.string.program_edit_min_temp_default).toDouble())
-        maxTemp.value = TemperatureFormatter.format(
-            resourceProvider.getString(R.string.program_edit_max_temp_default).toDouble())
+        minTemp.value = Temperature(resourceProvider.getString(R.string.program_edit_min_temp_default)).displayString()
+        maxTemp.value = Temperature(resourceProvider.getString(R.string.program_edit_max_temp_default)).displayString()
     }
 
     private fun initAvailableSensors() {
@@ -132,8 +129,8 @@ class ProgramEditViewModel : BaseViewModel {
     fun setProgram(program: Program) {
         this.program = program
         programName.value = program.name
-        maxTemp.value = TemperatureFormatter.format(program.maxTemp)
-        minTemp.value = TemperatureFormatter.format(program.minTemp)
+        maxTemp.value = program.maxTemp.displayString()
+        minTemp.value = program.minTemp.displayString()
         programIsActive.value = program.active
 
         updateSelectedSensor(program)
@@ -151,8 +148,8 @@ class ProgramEditViewModel : BaseViewModel {
     fun onClickSave(view: View){
         val program = Program.Builder(program)
             .name(programName.value!!)
-            .minTemp(minTemp.value!!.toDouble())
-            .maxTemp(maxTemp.value!!.toDouble())
+            .minTemp(Temperature(minTemp.value!!))
+            .maxTemp(Temperature(maxTemp.value!!))
             .coolingRelayIndex(if (selectedCoolingRelayPosition.value!! > 0) selectedCoolingRelayPosition.value!! - 1 else Program.NO_RELAY)
             .heatingRelayIndex(if (selectedHeatingRelayPosition.value!! > 0) selectedHeatingRelayPosition.value!! - 1 else Program.NO_RELAY)
             .sensorId(getSelectedSensor())
@@ -190,7 +187,7 @@ class ProgramEditViewModel : BaseViewModel {
             return sensors.value!![selectedSensorPosition.value!!].id
         }
         return Program.DEFAULT_SENSOR_ID
-    }
+   }
 
     override fun onCleared()
     {
@@ -198,24 +195,24 @@ class ProgramEditViewModel : BaseViewModel {
     }
 
     fun onMinTempIncrease(view: View) {
-        modifyTemp(minTemp, 0.5)
+       modifyTemp(minTemp, Temperature(0.5))
     }
 
     fun onMinTempDecrease(view: View) {
-        modifyTemp(minTemp, -0.5)
+        modifyTemp(minTemp, Temperature(-0.5))
     }
 
     fun onMaxTempIncrease(view: View) {
-        modifyTemp(maxTemp, 0.5)
+        modifyTemp(maxTemp, Temperature(0.5))
     }
 
     fun onMaxTempDecrease(view: View) {
-        modifyTemp(maxTemp, -0.5)
+        modifyTemp(maxTemp, Temperature(-0.5))
     }
 
-    fun modifyTemp(liveData: MutableLiveData<String>, delta: Double) {
-        val oldValue = liveData.value!!.toDouble()
-        val newValue = oldValue + delta
-        liveData.value = TemperatureFormatter.format(newValue)
+    fun modifyTemp(liveData: MutableLiveData<String>, delta: Temperature) {
+        val oldValue = Temperature(liveData.value!!)
+        val newValue : Temperature = oldValue + delta
+        liveData.value = newValue.displayString()
     }
 }

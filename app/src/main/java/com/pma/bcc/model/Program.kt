@@ -15,9 +15,9 @@ data class Program (
     @SerializedName("cooling_relay_index")
     val coolingRelayIndex : Int = NO_RELAY,
     @SerializedName("max_temp")
-    val maxTemp : Double = DEFAULT_TEMP,
+    val maxTemp : Temperature = DEFAULT_TEMP,
     @SerializedName("min_temp")
-    val minTemp : Double = DEFAULT_TEMP,
+    val minTemp : Temperature = DEFAULT_TEMP,
     @SerializedName("active")
     val active : Boolean = DEFAULT_ACTIVE,
     @SerializedName("crc")
@@ -28,7 +28,7 @@ data class Program (
         const val ID_UNKNOWN = ""
         const val DEFAULT_NAME = ""
         const val DEFAULT_SENSOR_ID = ""
-        const val DEFAULT_TEMP = 0.0
+        val DEFAULT_TEMP = Temperature("0.0")
         const val DEFAULT_ACTIVE = true
         const val CRC_UNKNOWN = ""
     }
@@ -39,8 +39,8 @@ data class Program (
         private var sensorId : String = program?.sensorId ?: DEFAULT_SENSOR_ID
         private var heatingRelayIndex : Int = program?.heatingRelayIndex ?: NO_RELAY
         private var coolingRelayIndex : Int = program?.coolingRelayIndex ?: NO_RELAY
-        private var maxTemp : Double = program?.maxTemp ?: DEFAULT_TEMP
-        private var minTemp : Double = program?.minTemp ?: DEFAULT_TEMP
+        private var maxTemp : Temperature = program?.maxTemp ?: DEFAULT_TEMP
+        private var minTemp : Temperature = program?.minTemp ?: DEFAULT_TEMP
         private var active : Boolean = program?.active ?: DEFAULT_ACTIVE
         private var crc : String = program?.crc ?: CRC_UNKNOWN
 
@@ -49,8 +49,8 @@ data class Program (
         fun sensorId(sensorId : String) = apply { this.sensorId = sensorId }
         fun heatingRelayIndex(heatingRelayIndex: Int) = apply { this.heatingRelayIndex = heatingRelayIndex }
         fun coolingRelayIndex(coolingRelayIndex: Int) = apply { this.coolingRelayIndex = coolingRelayIndex }
-        fun maxTemp(maxTemp: Double) = apply { this.maxTemp = maxTemp }
-        fun minTemp(minTemp: Double) = apply { this.minTemp = minTemp }
+        fun maxTemp(maxTemp: Temperature) = apply { this.maxTemp = maxTemp }
+        fun minTemp(minTemp: Temperature) = apply { this.minTemp = minTemp }
         fun active(active: Boolean) = apply { this.active = active }
 
         fun build() = Program(

@@ -8,7 +8,7 @@ data class ProgramState(
     @SerializedName("program_crc")
     val programCrc: String,
     @SerializedName("current_temperature")
-    val currentTemp: Double,
+    val currentTemp: Temperature,
     @SerializedName("heating_activated")
     val heatingActivated: Boolean,
     @SerializedName("cooling_activated")
