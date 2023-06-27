@@ -3,7 +3,7 @@
 ### What is this repository for? ###
 
 This is an Android client for Brewery Controller
-https://bitbucket.org/pmarcinkowski/raspberry-pi-brewery-controller/
+https://github.com/piotrmarcinkowski/raspberry-pi-brewery-controller
 
 ### Application screenshots ###
 
